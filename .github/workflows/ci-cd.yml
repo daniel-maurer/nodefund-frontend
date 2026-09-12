@@ -55,11 +55,27 @@ jobs:
 
       - name: 3. Recuperar Parâmetros da Infra (Bucket e CloudFront)
         run: |
-          BUCKET=$(aws cloudformation describe-stacks --stack-name nodefund-frontend --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" --output text)
-          DIST_ID=$(aws cloudformation describe-stacks --stack-name nodefund-frontend --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)
-          
-          echo "FRONTEND_BUCKET=$BUCKET" >> $GITHUB_ENV
-          echo "CLOUDFRONT_ID=$DIST_ID" >> $GITHUB_ENV
+          STACK_OUTPUTS=$(aws cloudformation describe-stacks \
+            --stack-name nodefund-frontend \
+            --query "Stacks[0].Outputs" \
+            --output json)
+
+          BUCKET=$(echo "$STACK_OUTPUTS" | jq -r '.[] | select(.OutputKey=="FrontendBucketName") | .OutputValue')
+          DIST_ID=$(echo "$STACK_OUTPUTS" | jq -r '.[] | select(.OutputKey=="CloudFrontDistributionId") | .OutputValue')
+
+          if [ -z "$BUCKET" ] || [ "$BUCKET" == "null" ]; then
+            echo "Erro: FrontendBucketName não encontrado nos outputs da stack nodefund-frontend"
+            exit 1
+          fi
+          if [ -z "$DIST_ID" ] || [ "$DIST_ID" == "null" ]; then
+            echo "Erro: CloudFrontDistributionId não encontrado nos outputs da stack nodefund-frontend"
+            exit 1
+          fi
+
+          echo "FRONTEND_BUCKET=$BUCKET"   >> $GITHUB_ENV
+          echo "CLOUDFRONT_ID=$DIST_ID"    >> $GITHUB_ENV
+          echo "Bucket: $BUCKET"
+          echo "CloudFront: $DIST_ID"
 
       - name: 4. Sync de Arquivos Estáticos com S3
         run: |
