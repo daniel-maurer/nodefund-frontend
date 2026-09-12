@@ -49,7 +49,7 @@ jobs:
           aws cloudformation deploy \
             --template-file infra/cloudformation.yaml \
             --stack-name nodefund-frontend \
-            --parameter-overrides BffLoadBalancerDomain=${{ env.ALB_DOMAIN }} \
+            --parameter-overrides BackendALBDnsName=${{ env.ALB_DOMAIN }} \
             --capabilities CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset
 
