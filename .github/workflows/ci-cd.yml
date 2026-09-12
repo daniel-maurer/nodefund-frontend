@@ -37,7 +37,7 @@ jobs:
           
       - name: 1. Descobrir ALB Domain do Backend
         run: |
-          ALB_DOMAIN=$(aws cloudformation describe-stacks --stack-name nodefund-bff --query "Stacks[0].Outputs[?OutputKey=='ALBDomain'].OutputValue" --output text)
+          ALB_DOMAIN=$(aws cloudformation describe-stacks --stack-name nodefund-bff --query "Stacks[0].Outputs[?OutputKey=='ALBDnsName'].OutputValue" --output text)
           if [ -z "$ALB_DOMAIN" ] || [ "$ALB_DOMAIN" == "None" ]; then
             echo "Erro: Load Balancer do BFF não encontrado. A stack 'nodefund-bff' já foi criada?"
             exit 1
