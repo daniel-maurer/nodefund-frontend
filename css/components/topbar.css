@@ -1,0 +1,127 @@
+/* Barra Superior (Top Bar) */
+.top-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.top-search-input-wrap {
+  position: relative;
+  width: 240px;
+}
+
+.top-search-input {
+  width: 100%;
+  padding: 7px 34px 7px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  font-size: 0.82rem;
+  color: var(--charcoal-dark);
+  outline: none;
+}
+
+.top-search-input:focus {
+  background: var(--white);
+  border-color: var(--charcoal-dark);
+}
+
+.top-search-cmd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+}
+
+.top-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-nav-tab {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--charcoal-light);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  transition: all 0.15s ease;
+}
+
+.top-nav-tab:hover {
+  color: var(--charcoal-dark);
+}
+
+.top-nav-tab.active {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--charcoal-dark);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.top-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-add-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add-new:hover {
+  background: var(--white);
+}
+
+.btn-delete-portfolio {
+  background: #FEE2E2 !important;
+  color: #DC2626 !important;
+  border: 1px solid #FECACA !important;
+}
+
+.btn-delete-portfolio:hover {
+  background: #FEE2E2 !important;
+  border-color: #F87171 !important;
+  color: #B91C1C !important;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.15);
+}
+
+.btn-delete-portfolio:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.icon-btn-ghost {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--charcoal-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+

@@ -1,0 +1,213 @@
+/* ==========================================================================
+   Hero Section: Relatório de Investimentos & Métricas com Divisores
+   (Fiel ao Expenses Report com ticks verticais do Dribbble)
+   ========================================================================== */
+
+.hero-report-header {
+  margin-bottom: 24px;
+}
+
+.report-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.report-title-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-title-text {
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.8px;
+}
+
+.report-period-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+}
+
+.period-pill-interactive {
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.period-select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  padding: 4px 26px 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 10 6'%3E%3Cpath fill='%2338393D' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.report-networth-right {
+  text-align: right;
+}
+
+.report-networth-val {
+  font-size: 2.3rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.report-networth-lbl {
+  font-size: 0.72rem;
+  color: var(--charcoal-muted);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Faixa de 4 Métricas com Divisores Verticais */
+.stats-divider-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+}
+
+.stat-block {
+  padding: 0 18px;
+  position: relative;
+}
+
+.stat-block:first-child {
+  padding-left: 0;
+}
+
+.stat-block:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.stat-val-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.stat-amount {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.5px;
+}
+
+.stat-pct-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-muted);
+}
+
+.stat-pct-badge.positive {
+  color: #16A34A;
+}
+
+.stat-pct-badge.negative {
+  color: #C25953;
+}
+
+.stat-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.stat-label-sub {
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-meta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.stat-quote-date {
+  font-size: 0.68rem;
+  color: var(--charcoal-muted);
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  opacity: 0.85;
+}
+
+.stat-refresh-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--charcoal-muted);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.stat-refresh-btn:hover {
+  color: var(--charcoal-dark);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.stat-refresh-btn.spinning svg {
+  animation: statSpin 0.75s linear infinite;
+}
+
+@keyframes statSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Padrão de Linhas / Ticks Verticais */
+.tick-comb-pattern {
+  width: 100%;
+  height: 18px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.28) 0px,
+    rgba(0, 0, 0, 0.28) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  opacity: 0.6;
+  margin-top: 14px;
+}
+

@@ -1,0 +1,277 @@
+/* ==========================================================================
+   Seção Invoices (Abaixo de Sales)
+   Dois Cartões: Peach (#FFEFDC) e Mint (#E8F3EB) com Ticks
+   ========================================================================== */
+
+.invoices-section-wrap {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.invoices-header-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.invoices-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+}
+
+.invoices-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.invoice-card {
+  border-radius: 22px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.invoice-card-peach {
+  background: var(--peach);
+}
+
+.invoice-card-mint {
+  background: var(--mint);
+}
+
+.invoice-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.invoice-card-val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.5px;
+}
+
+.invoice-card-lbl {
+  font-size: 0.75rem;
+  color: var(--charcoal-light);
+  margin-top: 2px;
+}
+
+.invoice-period-pill {
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+}
+
+.invoice-card-ticks {
+  width: 100%;
+  height: 8px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.2) 0px,
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  opacity: 0.4;
+  margin-top: 12px;
+}
+
+
+/* Cards de Rentabilidade por Ativo (Estilo Cartões de Patrimônio Dribbble) */
+.asset-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.asset-bank-card {
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 230px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.asset-bank-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.asset-bank-card .bank-account-name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.asset-bank-card .bank-circle-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.asset-bank-card .bank-waves-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 12px 0 8px 0;
+}
+
+.asset-bank-card .bank-wave-svg {
+  width: 48%;
+  height: 24px;
+}
+
+.asset-bank-card .bank-numbers-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.asset-bank-card .bank-num-big {
+  font-size: 1.18rem;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+
+.asset-bank-card .bank-card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+
+/* ==========================================================================
+   Month Picker Popover (Modern Finance UI)
+   ========================================================================== */
+.invoices-month-picker-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.invoices-picker-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.invoices-picker-btn:hover {
+  background: var(--white);
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.month-picker-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 250px;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 14px;
+  z-index: 100;
+  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.month-picker-year-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.month-picker-year-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.5px;
+}
+
+.month-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.month-pill-item {
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.02);
+  color: var(--charcoal-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.month-pill-item:hover:not(.disabled) {
+  background: var(--mint);
+  color: var(--mint-dark);
+}
+
+.month-pill-item.active {
+  background: var(--charcoal-dark);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.month-pill-item.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+

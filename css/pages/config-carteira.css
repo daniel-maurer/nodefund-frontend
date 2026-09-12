@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Página: Configuração de Carteira & Ativos (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+.portfolio-config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.portfolio-total-alloc-badge {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  background: var(--gray-slot);
+  color: var(--charcoal-dark);
+}
+
+.portfolio-total-alloc-badge.valid {
+  background: var(--mint);
+  color: var(--mint-dark);
+}
+
+.portfolio-total-alloc-badge.invalid {
+  background: var(--color-negative-bg);
+  color: var(--color-negative);
+}
+
+.asset-color-swatch-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  box-shadow: 0 0 0 1px var(--border-medium);
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+}

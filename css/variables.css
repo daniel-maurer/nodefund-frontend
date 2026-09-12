@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Design Tokens & Variáveis Globais (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Tipografia */
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+  /* Escala Tipográfica */
+  --text-2xs: 0.65rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-base: 0.95rem;
+  --text-lg: 1.1rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2.0rem;
+  --text-4xl: 2.5rem;
+
+  /* Pesos de Fonte */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Paleta Neutra (Dribbble Charcoal & Grays) */
+  --charcoal: #38393D;
+  --charcoal-dark: #222428;
+  --charcoal-pill: #2E3034;
+  --charcoal-muted: #8E9198;
+  --charcoal-light: #55575E;
+
+  --white: #FFFFFF;
+  --gray-slot: #F4F5F7;
+  --gray-pill: #E5E7EB;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.12);
+
+  /* Destaques Financeiros (QuickBooks / Dribbble) */
+  --mint: #E8F3EB;
+  --mint-dark: #2D6A4F;
+  --mint-border: #D1E7D8;
+
+  --peach: #FFEFDC;
+  --peach-dark: #B45309;
+  --peach-border: #FEE2C5;
+
+  --sky: #C7E3FF;
+  --sky-dark: #1E40AF;
+  --sky-border: #B3D7FC;
+
+  /* Cores Semânticas de Performance */
+  --color-positive: #2E7D5B;
+  --color-positive-bg: #E8F3EB;
+  --color-negative: #C55A54;
+  --color-negative-bg: #FDE8E8;
+  --color-neutral: #8E9198;
+
+  /* Tokens de Cores dos Ativos e Benchmarks */
+  --fund-sage: #2E7D5B;
+  --fund-slate: #3B6978;
+  --fund-terracotta: #B86B43;
+  --fund-plum: #5D506E;
+  --fund-ochre: #A68032;
+  --fund-teal: #3D6F6B;
+  --fund-lavender: #8C7AA9;
+  --fund-rosewood: #A65B62;
+
+  /* Espaçamentos Sistemáticos */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Raios de Borda */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-frame: 36px;
+  --radius-pill: 9999px;
+
+  /* Sombras e Elevações */
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.25);
+  --shadow-frame: 0 30px 90px rgba(0, 0, 0, 0.28);
+
+  /* Transições Suaves */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Níveis de Camadas (Z-Index) */
+  --z-base: 1;
+  --z-sticky: 50;
+  --z-dropdown: 100;
+  --z-backdrop: 950;
+  --z-drawer: 990;
+  --z-modal: 1000;
+  --z-toast: 1100;
+}

@@ -1,0 +1,55 @@
+/* Cards de Provedores de APIs em Fontes e APIs */
+.sources-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.source-card-box {
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.source-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.source-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+}
+
+.source-card-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--mint);
+  color: var(--mint-dark);
+}
+
+.source-card-desc {
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+  line-height: 1.35;
+}
+
+.source-card-input-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--charcoal-light);
+  margin-bottom: 3px;
+  display: block;
+}
+

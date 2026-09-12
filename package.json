@@ -1,0 +1,20 @@
+{
+  "name": "nodefund-frontend",
+  "version": "1.0.0",
+  "description": "Frontend Interface for nodefund - Distributed Node Architecture",
+  "main": "dev-server.js",
+  "scripts": {
+    "start": "node dev-server.js",
+    "dev": "node --watch dev-server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "frontend",
+    "nodefund",
+    "investments",
+    "fintech",
+    "dashboard"
+  ],
+  "author": "nodefund",
+  "license": "ISC"
+}

@@ -1,0 +1,121 @@
+/* ==========================================================================
+   Layout Principal & Superfícies (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+/* Moldura Arredondada Principal da Aplicação (Janela Desktop Fixa) */
+.dribbble-frame {
+  width: 100%;
+  max-width: 1440px;
+  height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px);
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(220, 244, 228, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(255, 243, 226, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(228, 238, 255, 0.95) 0%, transparent 40%),
+    var(--gray-slot);
+  border-radius: var(--radius-frame);
+  box-shadow: var(--shadow-frame);
+  overflow: hidden;
+  display: flex;
+  position: relative;
+  transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Temas dinâmicos por Aba */
+.dribbble-frame[data-active-tab="tab-simulation"] {
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(220, 244, 228, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(255, 243, 226, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(228, 238, 255, 0.95) 0%, transparent 40%),
+    var(--gray-slot);
+}
+
+.dribbble-frame[data-active-tab="tab-calculator"] {
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(210, 245, 235, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(255, 245, 230, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(220, 238, 255, 0.95) 0%, transparent 40%),
+    #F4F6F7;
+}
+
+.dribbble-frame[data-active-tab="tab-portfolio"] {
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(225, 242, 235, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(248, 245, 250, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(225, 240, 255, 0.95) 0%, transparent 40%),
+    #F5F5F8;
+}
+
+.dribbble-frame[data-active-tab="tab-data"] {
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(215, 242, 248, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(240, 248, 252, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(220, 238, 255, 0.95) 0%, transparent 40%),
+    #F4F7F9;
+}
+
+.dribbble-frame[data-active-tab="tab-sources"] {
+  background: 
+    radial-gradient(circle at 12% 8%, rgba(215, 245, 238, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 48% 6%, rgba(245, 248, 248, 0.9) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(225, 242, 252, 0.95) 0%, transparent 40%),
+    #F4F8F7;
+}
+
+/* Área de Conteúdo Principal (Direita) */
+.dribbble-content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px 32px 32px 14px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+/* Superfície Branca Principal (#FFFFFF, border-radius: 28px) */
+.main-white-surface {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  padding: 28px;
+  box-shadow: var(--shadow-subtle);
+  flex: 1;
+}
+
+/* Gerenciamento de Abas do Sistema */
+.tab-content {
+  display: none !important;
+}
+
+.tab-content.active {
+  display: block !important;
+  animation: fadeInTab 0.18s ease-in-out;
+}
+
+@keyframes fadeInTab {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.surface-upper-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 28px;
+  margin-bottom: 28px;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1180px) {
+  .surface-upper-grid {
+    grid-template-columns: 1fr;
+  }
+  .bank-section-box {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+}

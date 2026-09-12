@@ -1,0 +1,70 @@
+/* ==========================================================================
+   Seções Analíticas Integradas na Superfície Branca
+   1. Treemap Proporcional
+   2. Matriz de Correlação Heatmap
+   3. Tabela Numérica Mês a Mês vs Benchmark
+   4. Métricas Individuais por Ativo
+   ========================================================================== */
+
+.surface-analytics-divider {
+  margin: 32px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.surface-section-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  margin-bottom: 4px;
+}
+
+.surface-section-desc {
+  font-size: 0.78rem;
+  color: var(--charcoal-muted);
+  margin-bottom: 18px;
+}
+
+/* Grid Treemap e Correlação (Empilhados Verticalmente) */
+.analytics-side-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+.analytics-card-frame {
+  background: var(--gray-slot);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  width: 100%;
+}
+
+.analytics-card-frame.white-frame {
+  background: #FFFFFF;
+  border: none;
+  padding: 0;
+}
+
+/* Treemap Nodes */
+.treemap-container {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+}
+
+.treemap-node {
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.treemap-node:hover {
+  transform: translateY(-2px);
+}
+

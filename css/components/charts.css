@@ -1,0 +1,423 @@
+/* ==========================================================================
+   Coluna da Esquerda: Gráfico de Vendas / Performance (Sales Box)
+   ========================================================================== */
+
+.sales-card-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sales-header-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sales-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+}
+
+.sales-tools-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sales-val-big {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 2px;
+}
+
+.sales-sub-label {
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+  margin-bottom: 14px;
+}
+
+/* Linha de Legenda e Toggles do Gráfico */
+.sales-legend-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sales-mode-pills {
+  display: flex;
+  gap: 4px;
+  background: var(--gray-slot);
+  padding: 3px;
+  border-radius: 9999px;
+}
+
+.sales-mode-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-light);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.sales-mode-btn.active {
+  background: var(--charcoal-dark);
+  color: var(--white);
+}
+
+/* ==========================================================================
+   BARRAS CAPSULE OFICIAIS DO DRIBBLE (Sales Columns)
+   Colunas arredondadas com topo listrado (Monthly Goal) e pílulas escuras (Sales)
+   ========================================================================== */
+
+.dribbble-capsule-chart-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 280px;
+  padding: 10px 0 0 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.capsule-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 240px;
+  padding: 6px 0 28px 0;
+  font-size: 0.72rem;
+  color: var(--charcoal-muted);
+  font-weight: 600;
+  min-width: 44px;
+  margin-right: 4px;
+  text-align: right;
+  user-select: none;
+}
+
+.capsule-column-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 58px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.capsule-track-slot {
+  width: 100%;
+  height: 240px;
+  border-radius: 22px;
+  background: var(--gray-slot);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 6px;
+  gap: 6px;
+}
+
+/* Listras diagonais no topo do slot (Monthly Goal do Dribbble) */
+.capsule-track-slot.striped::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.05) 0,
+    rgba(0, 0, 0, 0.05) 3px,
+    transparent 3px,
+    transparent 7px
+  );
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+}
+
+.capsule-value-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  position: relative;
+  top: auto;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+.capsule-bar-fill {
+  width: 44px;
+  border-radius: 18px;
+  background: var(--charcoal);
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.capsule-month-pill {
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--charcoal-muted);
+  background: var(--gray-pill);
+}
+
+.capsule-column-item.active .capsule-month-pill {
+  background: var(--charcoal-dark);
+  color: var(--white);
+}
+
+.capsule-column-item.inactive .capsule-track-slot {
+  opacity: 0.55;
+}
+
+/* Canvas Chart.js */
+.dynamic-chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1;
+  min-height: 320px;
+  height: 320px;
+  display: block;
+  overflow: hidden;
+}
+
+.dynamic-chart-canvas-wrap canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block;
+}
+
+
+/* ==========================================================================
+   Ganho de Capital - Gráfico em Cápsulas Dribbble Personalizado
+   Fundo listrado exibindo o agregado do mês e segmentos arredondados (pílulas)
+   ========================================================================== */
+
+.gain-capsules-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+  min-height: 195px;
+  max-height: 225px;
+  padding: 2px 10px 0 10px;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.gain-capsule-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  flex: 1;
+  max-width: 80px;
+  min-width: 50px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.gain-capsule-col:hover {
+  transform: translateY(-2px);
+}
+
+.gain-capsule-val-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.gain-capsule-val-label.pos {
+  color: #10B981;
+}
+
+.gain-capsule-val-label.neg {
+  color: #EF4444;
+}
+
+.gain-capsule-val-label.zero {
+  color: var(--charcoal-muted);
+}
+
+/* Slot vertical arredondado de fundo (cápsula cinza suave do Dribbble) */
+.gain-capsule-track-slot {
+  width: 100%;
+  height: 152px;
+  border-radius: 22px;
+  background: var(--gray-slot);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 4px;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* Fundo listrado na barra que exibe o agregado do mês (Fiel ao Dribbble) */
+.gain-capsule-striped-bar {
+  position: absolute;
+  bottom: 4px;
+  left: 3px;
+  right: 3px;
+  width: calc(100% - 6px);
+  border-radius: 18px;
+  background-color: rgba(15, 23, 42, 0.05);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(15, 23, 42, 0.11) 0,
+    rgba(15, 23, 42, 0.11) 4px,
+    transparent 4px,
+    transparent 9px
+  );
+  border: 1.5px dashed rgba(15, 23, 42, 0.22);
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.gain-capsule-striped-bar.pos {
+  background-color: rgba(16, 185, 129, 0.06);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(16, 185, 129, 0.16) 0,
+    rgba(16, 185, 129, 0.16) 4px,
+    transparent 4px,
+    transparent 9px
+  );
+  border: 1.5px dashed rgba(16, 185, 129, 0.38);
+}
+
+.gain-capsule-striped-bar.neg {
+  background-color: rgba(239, 68, 68, 0.06);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(239, 68, 68, 0.16) 0,
+    rgba(239, 68, 68, 0.16) 4px,
+    transparent 4px,
+    transparent 9px
+  );
+  border: 1.5px dashed rgba(239, 68, 68, 0.38);
+}
+
+/* Container de segmentos de ativos dentro do slot */
+.gain-capsule-segments-wrap {
+  position: absolute;
+  bottom: 7px;
+  width: 70%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* Cada segmento individual de fundo: PÍLULA 100% ARREDONDADA (zero flat!) */
+.gain-capsule-fund-segment {
+  width: 100%;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
+  min-height: 6px;
+}
+
+.gain-capsule-fund-segment:hover {
+  filter: brightness(1.15);
+  transform: scale(1.06);
+}
+
+/* Barra sólida única quando em modo Total */
+.gain-capsule-total-fill {
+  position: absolute;
+  bottom: 7px;
+  width: 70%;
+  border-radius: 9999px;
+  background: var(--charcoal-dark);
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+}
+
+.gain-capsule-total-fill.pos {
+  background: linear-gradient(180deg, #10B981 0%, #059669 100%);
+}
+
+.gain-capsule-total-fill.neg {
+  background: linear-gradient(180deg, #EF4444 0%, #DC2626 100%);
+}
+
+/* Pílula do Mês abaixo da cápsula */
+.gain-capsule-month-pill {
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--charcoal-muted);
+  background: var(--gray-pill);
+  transition: all 0.2s ease;
+}
+
+.gain-capsule-col:hover .gain-capsule-month-pill,
+.gain-capsule-col.active .gain-capsule-month-pill {
+  background: var(--charcoal-dark);
+  color: var(--white);
+}
+
+/* Popover / Tooltip Flutuante de Alta Fidelidade */
+.gain-capsule-popover {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.96);
+  color: #FFFFFF;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  min-width: 190px;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  display: none;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+
+.gain-capsule-col:hover .gain-capsule-popover {
+  display: block;
+}
+

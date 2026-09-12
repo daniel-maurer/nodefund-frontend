@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Coluna da Direita: Bank Accounts
+   Dois Cartões: Mint (#E8F3EB) e Sky Blue (#C7E3FF) com Ondas Sine Wave
+   ========================================================================== */
+
+.bank-section-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  width: 340px;
+  min-width: 340px;
+  max-width: 340px;
+  flex-shrink: 0;
+}
+
+.bank-header-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 28px;
+  margin-bottom: 2px;
+}
+
+.bank-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+}
+
+.btn-connect-pill {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  cursor: pointer;
+}
+
+/* Cartão Bank Mint */
+.bank-account-card {
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 200px;
+}
+
+.bank-card-mint-bg {
+  background: var(--mint);
+}
+
+.bank-card-sky-bg {
+  background: var(--sky);
+}
+
+.bank-account-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bank-circle-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--charcoal-dark);
+}
+
+.bank-info-mid {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.bank-account-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+}
+
+.bank-account-time {
+  font-size: 0.7rem;
+  color: var(--charcoal-light);
+}
+
+.bank-action-icons {
+  display: flex;
+  gap: 6px;
+  color: var(--charcoal-light);
+  font-size: 0.85rem;
+}
+
+/* Ondas Duplas (Sine Wave SVGs) */
+.bank-waves-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 12px 0 8px 0;
+}
+
+.bank-wave-svg {
+  width: 48%;
+  height: 24px;
+}
+
+.bank-numbers-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bank-num-big {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.5px;
+}
+
+.bank-num-sub {
+  font-size: 0.72rem;
+  color: var(--charcoal-light);
+}
+
+.bank-card-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bank-badge-pill {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bank-footer-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  text-decoration: none;
+  cursor: pointer;
+}
+

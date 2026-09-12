@@ -1,0 +1,211 @@
+@layer components {
+  .login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .login-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+  }
+
+  .login-brand {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .login-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.75rem;
+  }
+
+  .login-brand h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .login-brand p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .auth-form {
+    display: none;
+  }
+
+  .auth-form.active {
+    display: block;
+  }
+
+  .auth-form h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+    text-align: center;
+  }
+
+  .auth-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: -1rem 0 1.5rem;
+  }
+
+  .auth-form .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .auth-form label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .auth-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .auth-form input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  }
+
+  .auth-form input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+  }
+
+  .auth-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+  }
+
+  .auth-btn:hover {
+    opacity: 0.9;
+  }
+
+  .auth-btn:active {
+    transform: scale(0.98);
+  }
+
+  .auth-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .auth-error {
+    color: #ff6b6b;
+    font-size: 0.82rem;
+    min-height: 1.2em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .auth-switch {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .auth-switch a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .auth-switch a:hover {
+    text-decoration: underline;
+  }
+
+  /* Profile logout button */
+  .profile-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .profile-logout-btn {
+    flex: 0 0 auto;
+    padding: 0.45rem 0.7rem;
+    background: rgba(255, 107, 107, 0.12);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .profile-logout-btn:hover {
+    background: rgba(255, 107, 107, 0.25);
+  }
+
+  .profile-apps-btn {
+    flex: 1;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 480px) {
+    .login-container {
+      margin: 1rem;
+      padding: 1.75rem;
+    }
+  }
+}

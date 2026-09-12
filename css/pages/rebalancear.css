@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Página: Rebalancear & Aporte Inteligente (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+.rebalance-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.rebalance-summary-card {
+  background: var(--gray-slot);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.rebalance-order-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+}
+
+.rebalance-order-badge.buy {
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+}
+
+.rebalance-order-badge.hold {
+  background: var(--gray-slot);
+  color: var(--charcoal-muted);
+}

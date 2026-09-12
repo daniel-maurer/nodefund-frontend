@@ -1,0 +1,340 @@
+/* Tabela Numérica Mês a Mês */
+.monthly-table-frame {
+  background: var(--gray-slot);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  margin-bottom: 32px;
+}
+
+.monthly-top-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.bm-select-pill {
+  padding: 5px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  outline: none;
+}
+
+.clean-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.clean-table th {
+  background: #F9FAFB;
+  color: var(--charcoal-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.clean-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  color: var(--charcoal-dark);
+}
+
+.clean-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-pill.badge-mint {
+  background: rgba(39, 103, 73, 0.12);
+  color: #276749;
+}
+
+.badge-pill.badge-peach {
+  background: rgba(197, 90, 84, 0.12);
+  color: #C55A54;
+}
+
+
+/* ==========================================================================
+   Rentabilidade Histórica - Grade Anual (Ano x Mês estilo Mais Retorno)
+   ========================================================================== */
+.rentabilidade-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.rentabilidade-view-pills {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 3px;
+  border-radius: 9999px;
+  gap: 4px;
+}
+
+.rentabilidade-view-btn {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--charcoal-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rentabilidade-view-btn.active {
+  background: var(--white);
+  color: var(--charcoal-dark);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.rentabilidade-grid-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--white);
+}
+
+.rentabilidade-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.rentabilidade-grid-table thead tr {
+  background: #141B29;
+  color: #FFFFFF;
+}
+
+.rentabilidade-grid-table th {
+  padding: 10px 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  border: none;
+}
+
+.rentabilidade-grid-table th:first-child {
+  text-align: left;
+  padding-left: 16px;
+  border-top-left-radius: 15px;
+}
+
+.rentabilidade-grid-table th:last-child {
+  border-top-right-radius: 15px;
+  padding-right: 16px;
+}
+
+.rentabilidade-grid-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  vertical-align: middle;
+  line-height: 1.25;
+}
+
+.rentabilidade-grid-table tr:hover td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.rentabilidade-grid-table td:first-child {
+  text-align: left;
+  padding-left: 16px;
+}
+
+.rentabilidade-grid-table td:last-child {
+  padding-right: 16px;
+}
+
+.rent-cell-val {
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: block;
+}
+
+.rent-cell-val.positive {
+  color: #166534;
+}
+
+.rent-cell-val.negative {
+  color: #DC2626;
+}
+
+.rent-cell-sub {
+  font-size: 0.68rem;
+  color: var(--charcoal-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.rent-cell-year {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--charcoal-dark);
+  display: block;
+}
+
+.rent-cell-asset-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  display: block;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rent-cell-bm-label {
+  font-size: 0.67rem;
+  color: var(--charcoal-muted);
+  display: block;
+  margin-top: 1px;
+}
+
+/* Toolbar e Controles do Gráfico de Rentabilidade (Return Attribution) */
+.rentabilidade-chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-top: 0;
+  border-top: none;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.rent-attribution-legend-wrap {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 6px 8px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  max-height: 76px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 6px 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
+}
+
+.rent-attribution-legend-wrap.single-row {
+  grid-template-rows: auto;
+  max-height: 42px;
+}
+
+.rent-attribution-legend-wrap::-webkit-scrollbar {
+  height: 4px;
+}
+
+.rent-attribution-legend-wrap::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 9999px;
+}
+
+.rent-attribution-legend-wrap::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 9999px;
+}
+
+.rent-attribution-legend-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.rent-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--charcoal-dark);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+  user-select: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.rent-legend-pill:hover {
+  background: var(--white);
+  border-color: rgba(0, 0, 0, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.rent-legend-pill.disabled {
+  opacity: 0.4;
+  text-decoration: line-through;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.rent-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rent-pill-name {
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rent-pill-val {
+  font-weight: 800;
+}
+
+.rent-pill-val.pos {
+  color: #10B981;
+}
+
+.rent-pill-val.neg {
+  color: #EF4444;
+}
+

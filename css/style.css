@@ -1,0 +1,39 @@
+/* ==========================================================================
+   nodefund · Distributed Node Architecture
+   Modular CSS Orchestrator with Modern Cascade Layers
+   Reference: QuickBooks CRM Finance Management Dashboard (Dribbble 24029270)
+   ========================================================================== */
+
+/* 1. Declaração explícita de ordem das camadas da cascata */
+@layer tokens, reset, base, layout, components, pages, responsive;
+
+/* 2. Tokens Globais de Design e Variáveis */
+@import url('./variables.css') layer(tokens);
+
+/* 3. Reset e Estilos Base */
+@import url('./base.css') layer(base);
+
+/* 4. Layout e Moldura da Aplicação */
+@import url('./layout.css') layer(layout);
+
+/* 5. Componentes Isolados */
+@import url('./components/sidebar.css') layer(components);
+@import url('./components/topbar.css') layer(components);
+@import url('./components/hero-kpis.css') layer(components);
+@import url('./components/bank-cards.css') layer(components);
+@import url('./components/charts.css') layer(components);
+@import url('./components/asset-cards.css') layer(components);
+@import url('./components/tables.css') layer(components);
+@import url('./components/heatmap.css') layer(components);
+@import url('./components/treemap.css') layer(components);
+@import url('./components/modals.css') layer(components);
+@import url('./components/login.css') layer(components);
+
+/* 6. Páginas / Abas */
+@import url('./pages/rebalancear.css') layer(pages);
+@import url('./pages/config-carteira.css') layer(pages);
+@import url('./pages/data-status.css') layer(pages);
+@import url('./pages/sources-config.css') layer(pages);
+
+/* 7. Responsividade e Drawer Mobile */
+@import url('./responsive.css') layer(responsive);

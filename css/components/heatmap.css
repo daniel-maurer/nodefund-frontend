@@ -1,0 +1,65 @@
+/* Barra de Filtro de Índices para a Matriz de Correlação */
+.heatmap-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 4px 0;
+}
+
+.corr-bm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #FFFFFF;
+  color: var(--charcoal-light);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.corr-bm-pill:hover {
+  background: #F3F4F6;
+  color: var(--charcoal-dark);
+}
+
+.corr-bm-pill.active {
+  background: var(--charcoal-dark);
+  color: #FFFFFF;
+  border-color: var(--charcoal-dark);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Heatmap Table */
+.heatmap-table-wrap {
+  overflow-x: auto;
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-size: 0.72rem;
+}
+
+.heatmap-table th {
+  padding: 5px 6px;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  text-align: center;
+}
+
+.heatmap-table td {
+  padding: 6px 8px;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+

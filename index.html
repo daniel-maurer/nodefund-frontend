@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nodefund · Distributed Node Architecture</title>
+  <link rel="stylesheet" href="/css/style.css?v=3">
+  <style>
+    /* Força isolamento rigoroso de abas */
+    .tab-content {
+      display: none !important;
+    }
+    .tab-content.active {
+      display: block !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-container">
+      <div class="login-brand">
+        <div class="login-logo">nf</div>
+        <h1>nodefund</h1>
+        <p>Distributed Node Architecture</p>
+      </div>
+      
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active">
+        <h2>Entrar</h2>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Senha</label>
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <div id="login-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn">Entrar</button>
+        <p class="auth-switch">Não tem conta? <a href="#" id="show-signup">Criar conta</a></p>
+      </form>
+      
+      <!-- Signup Form -->
+      <form id="signup-form" class="auth-form">
+        <h2>Criar Conta</h2>
+        <div class="form-group">
+          <label for="signup-name">Nome</label>
+          <input type="text" id="signup-name" placeholder="Seu nome" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Senha</label>
+          <input type="password" id="signup-password" placeholder="Mín. 8 caracteres" required minlength="8" autocomplete="new-password">
+        </div>
+        <div id="signup-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn">Criar Conta</button>
+        <p class="auth-switch">Já tem conta? <a href="#" id="show-login">Entrar</a></p>
+      </form>
+      
+      <!-- Confirm Code Form -->
+      <form id="confirm-form" class="auth-form">
+        <h2>Confirmar Email</h2>
+        <p class="auth-subtitle">Enviamos um código para <span id="confirm-email-display"></span></p>
+        <div class="form-group">
+          <label for="confirm-code">Código de Verificação</label>
+          <input type="text" id="confirm-code" placeholder="123456" required pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code">
+        </div>
+        <div id="confirm-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn">Confirmar</button>
+        <p class="auth-switch"><a href="#" id="show-login-from-confirm">Voltar ao login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Moldura Arredondada Principal (Dribbble Frame) -->
+  <div class="dribbble-frame">
+
+    <!-- Backdrop para fechar Sidebar Drawer no Mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- =============================================================== -->
+    <!-- 1. SIDEBAR FLUTUANTE / DRAWER MOBILE -->
+    <!-- =============================================================== -->
+    <aside class="dribbble-sidebar" id="dribbble-sidebar">
+      <div class="sidebar-scrollable-top">
+        <!-- Brand Header: Monograma nf + nodefund com botão fechar no mobile -->
+        <div class="sidebar-brand-row">
+          <a href="#" class="brand-header" title="nodefund Dashboard">
+            <span class="brand-logo-qb">nf</span>
+            <div class="brand-text-wrap">
+              <span class="brand-product">nodefund</span>
+              <span class="brand-company">Distributed Node Architecture</span>
+            </div>
+          </a>
+          <button class="icon-btn-ghost mobile-close-sidebar-btn" id="btn-close-sidebar" title="Fechar Menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Seção de Carteiras Cadastradas na Sidebar (Seleção de Carteira) -->
+        <div class="sidebar-portfolios-section">
+          <div class="sidebar-portfolios-header">
+            <span class="sidebar-section-title">CARTEIRAS</span>
+            <button class="sidebar-add-portfolio-btn" id="btn-sidebar-add-portfolio" title="Criar Nova Carteira">+</button>
+          </div>
+          <div class="sidebar-portfolios-list" id="sidebar-portfolios-list"></div>
+        </div>
+
+        <!-- Lista de Navegação da Sidebar: Dados CVM/B3 e Fontes e APIs -->
+        <ul class="sidebar-nav-list">
+          <li>
+            <button class="sidebar-nav-item tab-btn" data-tab="tab-data">
+              <span class="nav-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+              </span>
+              <span>Dados CVM/B3</span>
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-nav-item tab-btn" data-tab="tab-sources">
+              <span class="nav-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+              </span>
+              <span>Fontes e APIs</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card do Usuário no Rodapé da Sidebar -->
+      <div class="sidebar-profile-card">
+        <div class="profile-row">
+          <div class="profile-avatar" id="profile-avatar">--</div>
+          <div class="profile-info">
+            <div class="profile-name" id="user-name">Carregando...</div>
+            <div class="profile-email" id="user-email">...</div>
+          </div>
+          <div class="profile-dots" title="Configurações">⋮</div>
+        </div>
+        <div class="profile-actions">
+          <button class="profile-apps-btn" id="btn-open-params">Parâmetros</button>
+          <button class="profile-logout-btn" id="btn-logout" title="Sair">⏻</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- =============================================================== -->
+    <!-- 2. CONTEÚDO PRINCIPAL (DIREITA) -->
+    <!-- =============================================================== -->
+    <main class="dribbble-content">
+
+      <!-- Top Bar Row: Menu Mobile, Search, Tabs Centrais e Ações -->
+      <div class="top-bar-row">
+        <div class="top-bar-left-group">
+          <!-- Botão Hamburger (Visível no Mobile e Tablet) -->
+          <button class="icon-btn-ghost mobile-menu-toggle-btn" id="btn-mobile-menu" title="Abrir Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
+          <div class="mobile-brand-badge">
+            <span class="brand-logo-qb" style="font-size: 1.25rem;">nf</span>
+            <span class="brand-product" style="font-size: 0.95rem;">nodefund</span>
+          </div>
+
+          <div class="top-search-input-wrap">
+            <input type="text" id="sidebar-search-input" class="top-search-input" placeholder="Search">
+            <span class="top-search-cmd">⌘</span>
+          </div>
+        </div>
+
+        <div class="top-nav-tabs" id="top-nav-tabs">
+          <button class="top-nav-tab active" data-tab="tab-simulation">Dashboard</button>
+          <button class="top-nav-tab" data-tab="tab-calculator">Rebalancear</button>
+          <button class="top-nav-tab" data-tab="tab-portfolio">Configuração Carteira</button>
+        </div>
+
+        <div class="top-actions-right">
+          <button class="btn-add-new" id="btn-top-add-new">
+            <span>+ Add New</span>
+          </button>
+          <button class="icon-btn-ghost" id="btn-top-settings" title="Configurações">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+          <button class="icon-btn-ghost" title="Ajuda">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Header: Expenses Report & 4-Column Stats with Ticks (Pixel-Perfect) -->
+      <section class="hero-report-header">
+        <div class="report-title-line">
+          <div class="report-title-left">
+            <h1 class="report-title-text" id="report-portfolio-title">Carteira Principal</h1>
+          </div>
+
+          <div class="report-networth-right">
+            <div class="report-networth-val" id="hero-total-networth">£ 87,121</div>
+            <div class="report-networth-lbl">Saldo Atual</div>
+          </div>
+        </div>
+
+        <!-- 4 Colunas de Métricas com Divisores Verticais: S&P 500, Ibovespa, Bitcoin e Câmbio USD -->
+        <div class="stats-divider-row" id="hero-stats-row">
+          <div class="stat-block" data-market-id="sp500">
+            <div class="stat-val-badge">
+              <span class="stat-amount" id="quote-sp500-val">7.686,14 pts</span>
+              <span class="stat-pct-badge negative" id="quote-sp500-badge">▽ 0,3%</span>
+            </div>
+            <div class="stat-label-row">
+              <span class="stat-label-sub">S&P 500</span>
+              <div class="stat-meta-group">
+                <span class="stat-quote-date" id="quote-sp500-date">31/08/2026</span>
+                <button type="button" class="stat-refresh-btn" data-market-id="sp500" title="Atualizar cotação (S&P 500)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-block" data-market-id="ibov">
+            <div class="stat-val-badge">
+              <span class="stat-amount" id="quote-ibov-val">177.419 pts</span>
+              <span class="stat-pct-badge positive" id="quote-ibov-badge">▲ 1,0%</span>
+            </div>
+            <div class="stat-label-row">
+              <span class="stat-label-sub">Ibovespa</span>
+              <div class="stat-meta-group">
+                <span class="stat-quote-date" id="quote-ibov-date">31/08/2026</span>
+                <button type="button" class="stat-refresh-btn" data-market-id="ibov" title="Atualizar cotação (Ibovespa)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-block" data-market-id="btc">
+            <div class="stat-val-badge">
+              <span class="stat-amount" id="quote-btc-val">US$ 78.548,63</span>
+              <span class="stat-pct-badge positive" id="quote-btc-badge">▲ 1,1%</span>
+            </div>
+            <div class="stat-label-row">
+              <span class="stat-label-sub">Bitcoin (USD)</span>
+              <div class="stat-meta-group">
+                <span class="stat-quote-date" id="quote-btc-date">31/08/2026</span>
+                <button type="button" class="stat-refresh-btn" data-market-id="btc" title="Atualizar cotação (Bitcoin)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-block" data-market-id="usd">
+            <div class="stat-val-badge">
+              <span class="stat-amount" id="quote-usd-val">R$ 5,18</span>
+              <span class="stat-pct-badge negative" id="quote-usd-badge">▽ 0,2%</span>
+            </div>
+            <div class="stat-label-row">
+              <span class="stat-label-sub">Dólar Hoje</span>
+              <div class="stat-meta-group">
+                <span class="stat-quote-date" id="quote-usd-date">31/08/2026</span>
+                <button type="button" class="stat-refresh-btn" data-market-id="usd" title="Atualizar cotação (Dólar)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Padrão Visual de Pente / Ticks Verticais do Dribbble -->
+        <div class="tick-comb-pattern"></div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- 3. GRANDE SUPERFÍCIE BRANCA (#FFFFFF, border-radius: 28px) -->
+      <!-- ============================================================= -->
+      <div class="main-white-surface">
+
+        <!-- ABA 1: SIMULAÇÃO E DASHBOARD COMPLETO -->
+        <div id="tab-simulation" class="tab-content active">
+
+          <!-- Upper Grid: Sales (Esquerda) + Bank accounts (Direita) -->
+          <div class="surface-upper-grid">
+
+            <!-- Coluna da Esquerda: Sales & Invoices -->
+            <div class="sales-card-box">
+              <!-- Header do Gráfico: Modos à esquerda e Período à direita (alinhados na mesma linha sem setas) -->
+              <div class="sales-header-line" style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <!-- Toggles de Modos do Gráfico (Rentabilidade, Patrimônio, Ganho de Capital, Aportes) -->
+                <div class="sales-mode-pills" id="chart-mode-pills">
+                  <button class="sales-mode-btn active" data-mode="pct">Rentabilidade</button>
+                  <button class="sales-mode-btn" data-mode="deposits_vs_total">Patrimônio</button>
+                  <button class="sales-mode-btn" data-mode="monthly_gain">Ganho de Capital</button>
+                  <button class="sales-mode-btn" data-mode="inflows_by_asset">Aportes</button>
+                </div>
+
+                <div class="sales-tools-row">
+                  <!-- Toggles de Moeda (R$ / US$) ao lado do seletor de período -->
+                  <div class="sales-mode-pills" id="currency-toggle-group">
+                    <button class="sales-mode-btn active" data-currency="brl">R$</button>
+                    <button class="sales-mode-btn" data-currency="usd">US$</button>
+                  </div>
+
+                  <!-- Popover Dropdown de Período (Mês, 30 dias, 90 dias, 6m, 1a, Tudo) -->
+                  <div class="invoices-month-picker-wrap" style="position: relative;">
+                    <button type="button" class="invoices-picker-btn" id="btn-sales-period-picker">
+                      <span id="sales-period-picker-label" style="font-weight: 700;">90 dias</span>
+                    </button>
+                    <div class="month-picker-popover" id="sales-period-popover" style="display: none; width: 220px; right: 0;">
+                      <div style="font-size: 0.72rem; font-weight: 800; color: var(--charcoal-dark); margin-bottom: 8px;">Período do Gráfico</div>
+                      <div class="month-picker-grid" id="sales-period-grid" style="grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                        <button type="button" class="month-pill-item" data-period="month">Mês</button>
+                        <button type="button" class="month-pill-item" data-period="30d">30 dias</button>
+                        <button type="button" class="month-pill-item active" data-period="90d">90 dias</button>
+                        <button type="button" class="month-pill-item" data-period="6m">6m</button>
+                        <button type="button" class="month-pill-item" data-period="1y">1a</button>
+                        <button type="button" class="month-pill-item" data-period="all">Tudo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de Controles Dedicada para o Gráfico de Rentabilidade (Return Attribution) -->
+              <div class="rentabilidade-chart-toolbar" id="rentabilidade-chart-toolbar" style="display: flex;">
+                <div class="rent-toolbar-left" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <!-- Seletor Popover de Modo de Exibição / Atribuição -->
+                  <div class="invoices-month-picker-wrap" id="wrap-rent-chart-view-picker" style="position: relative;">
+                    <button type="button" class="invoices-picker-btn" id="btn-rent-chart-view-picker">
+                      <span style="color: var(--charcoal-muted); font-size: 0.72rem; text-transform: uppercase;">Exibição:</span>
+                      <span id="rent-chart-view-picker-label" style="font-weight: 700;">Área Empilhada</span>
+                    </button>
+                    <div class="month-picker-popover" id="rent-chart-view-popover" style="display: none; width: 280px; left: 0;">
+                      <div style="font-size: 0.72rem; font-weight: 800; color: var(--charcoal-dark); margin-bottom: 8px;">Modo de Visualização</div>
+                      <div class="month-picker-grid" id="rent-chart-view-grid" style="grid-template-columns: 1fr; gap: 6px;">
+                        <!-- Opções geradas dinamicamente -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Seletor Popover de Benchmark / Indicador -->
+                  <div class="invoices-month-picker-wrap" id="wrap-rent-chart-bm-picker" style="position: relative;">
+                    <button type="button" class="invoices-picker-btn" id="btn-rent-chart-bm-picker">
+                      <span style="color: var(--charcoal-muted); font-size: 0.72rem; text-transform: uppercase;">Indicador:</span>
+                      <span id="rent-chart-bm-picker-label" style="font-weight: 700;">CDI</span>
+                    </button>
+                    <div class="month-picker-popover" id="rent-chart-bm-popover" style="display: none; width: 230px; left: 0;">
+                      <div style="font-size: 0.72rem; font-weight: 800; color: var(--charcoal-dark); margin-bottom: 8px;">Comparar com Indicador</div>
+                      <div class="month-picker-grid" id="rent-chart-bm-grid" style="grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                        <!-- Opções geradas dinamicamente -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resumo Rápido à Direita -->
+                <div class="rent-toolbar-right" id="rent-chart-summary-badge"></div>
+              </div>
+
+              <!-- Pílulas Interativas de Ativos (Seleção e Atribuição de Retorno - Acima do Gráfico com Scroll Horizontal) -->
+              <div class="rent-attribution-legend-wrap" id="rent-attribution-legend"></div>
+
+              <!-- Container Canvas Alternativo (Chart.js quando em outros modos) -->
+              <div class="dynamic-chart-canvas-wrap" id="dynamic-chart-canvas-wrap" style="display: block;">
+                <canvas id="mainChart"></canvas>
+              </div>
+
+              <!-- Container Cápsulas Ganho de Capital (Estilo Dribbble Personalizado com Fundo Listrado) -->
+              <div class="gain-capsules-container" id="gain-capsules-container" style="display: none;"></div>
+
+            </div>
+
+            <!-- Coluna da Direita: Patrimônio (Mint Card e Sky Card) -->
+            <div class="bank-section-box">
+              <div class="bank-header-line">
+                <div class="bank-title">Patrimônio</div>
+              </div>
+
+              <!-- Card 1: Bank 1 (Mint Background #E8F3EB) -->
+              <div class="bank-account-card bank-card-mint-bg">
+                <div class="bank-account-top">
+                  <div class="bank-circle-badge">R$</div>
+                  <div class="bank-info-mid">
+                    <div class="bank-account-name" id="bank1-name">Patrimônio em Reais</div>
+                    <div class="bank-account-time" id="bank1-time">Saldo Atual e Ganho do Mês</div>
+                  </div>
+                </div>
+
+                <!-- Duas Ondas Sine Wave (Dark Green) -->
+                <div class="bank-waves-row">
+                  <svg class="bank-wave-svg" id="svg-smart-equity" viewBox="0 0 120 30">
+                    <path id="wave-smart-equity" d="M0 20 Q30 5 60 18 T120 10" fill="none" stroke="#222428" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg class="bank-wave-svg" id="svg-smart-gain" viewBox="0 0 120 30">
+                    <path id="wave-smart-gain" d="M0 24 Q30 8 60 20 T120 12" fill="none" stroke="#222428" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+
+                <div class="bank-numbers-row">
+                  <div>
+                    <div class="bank-num-big" id="card-smart-val">R$ 0,00</div>
+                    <div class="bank-num-sub">Saldo Atual</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="bank-num-big" id="card-smart-profit">R$ 0,00</div>
+                    <div class="bank-num-sub">Ganho no Mês</div>
+                  </div>
+                </div>
+
+                <div class="bank-card-footer-row">
+                  <span class="bank-badge-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    <span id="card-smart-pct">0% Total</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Card 2: Bank 2 (Sky Blue Background #C7E3FF) -->
+              <div class="bank-account-card bank-card-sky-bg">
+                <div class="bank-account-top">
+                  <div class="bank-circle-badge">$</div>
+                  <div class="bank-info-mid">
+                    <div class="bank-account-name" id="bank2-name">Patrimônio em Dólar</div>
+                    <div class="bank-account-time" id="bank2-time">Saldo Atual e Ganho do Mês</div>
+                  </div>
+                </div>
+
+                <!-- Duas Ondas Sine Wave (Dark Blue) -->
+                <div class="bank-waves-row">
+                  <svg class="bank-wave-svg" id="svg-passive-equity" viewBox="0 0 120 30">
+                    <path id="wave-passive-equity" d="M0 22 Q30 10 60 16 T120 8" fill="none" stroke="#222428" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg class="bank-wave-svg" id="svg-passive-gain" viewBox="0 0 120 30">
+                    <path id="wave-passive-gain" d="M0 18 Q30 25 60 12 T120 20" fill="none" stroke="#222428" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+
+                <div class="bank-numbers-row">
+                  <div>
+                    <div class="bank-num-big" id="card-passive-val">$ 0.00</div>
+                    <div class="bank-num-sub">Saldo Atual (USD)</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="bank-num-big" id="card-passive-profit">$ 0.00</div>
+                    <div class="bank-num-sub">Ganho no Mês (USD)</div>
+                  </div>
+                </div>
+
+                <div class="bank-card-footer-row">
+                  <span class="bank-badge-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    <span id="card-passive-pct">1,469 Review</span>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Divisor Elegante de Seção -->
+          <div class="surface-analytics-divider"></div>
+
+          <!-- Invoices Section (Full Width abaixo de Sales e Bank accounts) -->
+          <div class="invoices-section-wrap full-width">
+            <div class="invoices-header-line">
+              <div class="invoices-title">Desempenho por Mês</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Seletor Moderno de Mês com Popover -->
+                <div class="invoices-month-picker-wrap">
+                  <button type="button" class="invoices-picker-btn" id="btn-invoices-month-picker" title="Escolha o mês de referência">
+                    <span id="invoices-picker-label" style="font-weight: 700;">Ago 2026</span>
+                  </button>
+
+                  <div class="month-picker-popover" id="invoices-month-popover" style="display: none;">
+                    <div class="month-picker-year-nav">
+                      <button type="button" class="icon-btn-ghost" id="btn-picker-prev-year">‹</button>
+                      <span class="month-picker-year-label" id="picker-current-year">2026</span>
+                      <button type="button" class="icon-btn-ghost" id="btn-picker-next-year">›</button>
+                    </div>
+                    <div class="month-picker-grid" id="picker-months-grid"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="invoices-cards-grid" id="invoices-cards-grid">
+              <!-- Cartões gerados dinamicamente via invoices.js -->
+            </div>
+          </div>
+
+          <!-- Divisor Elegante para Análises Avançadas -->
+          <div class="surface-analytics-divider"></div>
+
+          <!-- SEÇÃO ANALÍTICA: TREEMAP (DISTRIBUIÇÃO DA CARTEIRA) -->
+          <div class="analytics-card-frame" style="margin-bottom: 0;">
+            <div class="surface-section-heading">Distribuição da Carteira (Treemap)</div>
+            <div class="surface-section-desc">Proporção do capital em custódia para cada ativo da carteira ativa.</div>
+            <div class="treemap-container" id="treemap-container"></div>
+          </div>
+
+          <!-- Divisor Elegante de Seção -->
+          <div class="surface-analytics-divider"></div>
+
+          <!-- SEÇÃO ANALÍTICA: TABELA NUMÉRICA MÊS A MÊS VS BENCHMARK -->
+          <div class="monthly-table-frame">
+            <div class="rentabilidade-header-row">
+              <div>
+                <div class="surface-section-heading">Rentabilidade Histórica</div>
+                <div class="surface-section-desc" style="margin-bottom: 0;">Detalhamento da rentabilidade mês a mês e acumulada contra benchmarks.</div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <!-- Alternador de Visualização (Grade Anual vs Lista Cronológica) -->
+                <div class="rentabilidade-view-pills" id="rentabilidade-view-toggle">
+                  <button type="button" class="rentabilidade-view-btn active" data-view="grid">Grade Anual</button>
+                  <button type="button" class="rentabilidade-view-btn" data-view="list">Lista Cronológica</button>
+                </div>
+
+                <!-- Filtro por Ano (Popover Moderno no Estilo Desempenho por Mês) -->
+                <div class="invoices-month-picker-wrap" style="position: relative;">
+                  <button type="button" class="invoices-picker-btn" id="btn-rent-year-picker">
+                    <span style="color: var(--charcoal-muted); font-size: 0.72rem; text-transform: uppercase;">Ano:</span>
+                    <span id="rent-year-picker-label" style="font-weight: 700;">Todos os Anos</span>
+                  </button>
+                  <div class="month-picker-popover" id="rent-year-popover" style="display: none; width: 230px; right: 0;">
+                    <div style="font-size: 0.72rem; font-weight: 800; color: var(--charcoal-dark); margin-bottom: 8px;">Filtrar por Ano</div>
+                    <button type="button" class="month-pill-item active" id="btn-rent-year-all" data-year="all" style="width: 100%; margin-bottom: 8px; font-weight: 700; text-align: center;">Todos os Anos</button>
+                    <div class="month-picker-grid" id="rent-year-grid" style="grid-template-columns: repeat(3, 1fr); gap: 6px;">
+                      <!-- Anos gerados dinamicamente -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Seletor de Indicador / Benchmark (Popover Moderno no Estilo Desempenho por Mês) -->
+                <div class="invoices-month-picker-wrap" style="position: relative;">
+                  <button type="button" class="invoices-picker-btn" id="btn-rent-bm-picker">
+                    <span style="color: var(--charcoal-muted); font-size: 0.72rem; text-transform: uppercase;">Indicador:</span>
+                    <span id="rent-bm-picker-label" style="font-weight: 700;">CDI</span>
+                  </button>
+                  <div class="month-picker-popover" id="rent-bm-popover" style="display: none; width: 230px; right: 0;">
+                    <div style="font-size: 0.72rem; font-weight: 800; color: var(--charcoal-dark); margin-bottom: 8px;">Selecionar Indicador</div>
+                    <div class="month-picker-grid" id="rent-bm-grid" style="grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                      <!-- Indicadores gerados dinamicamente -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grade Anual (Default conforme layout solicitado) -->
+            <div id="monthly-grid-container" class="rentabilidade-grid-table-wrap">
+              <table class="rentabilidade-grid-table">
+                <thead>
+                  <tr>
+                    <th>ANO</th>
+                    <th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
+                    <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+                    <th>No ano</th>
+                    <th>Acumulado</th>
+                  </tr>
+                </thead>
+                <tbody id="monthly-grid-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- Lista Cronológica Tradicional -->
+            <div id="monthly-list-container" style="display: none; overflow-x: auto; margin-top: 14px;">
+              <table class="clean-table">
+                <thead>
+                  <tr>
+                    <th>Mês</th>
+                    <th>Ganho Líquido</th>
+                    <th>Retorno Carteira (%)</th>
+                    <th id="th-monthly-bm-name">Retorno CDI (%)</th>
+                    <th>Alfa (%)</th>
+                    <th>Rentabilidade Acumulada (%)</th>
+                    <th>Alfa Acumulado (%)</th>
+                    <th>% do Benchmark</th>
+                    <th>Saldo Final</th>
+                  </tr>
+                </thead>
+                <tbody id="monthly-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Divisor Elegante de Seção -->
+          <div class="surface-analytics-divider"></div>
+
+          <!-- SEÇÃO ANALÍTICA: RENTABILIDADE POR ATIVO -->
+          <div class="analytics-card-frame white-frame" id="asset-perf-section-wrap" style="margin-bottom: 0;">
+            <div class="surface-section-heading">Rentabilidade & Risco por Ativo</div>
+            <div class="surface-section-desc" style="margin-bottom: 0;">Métricas aprofundadas de rentabilidade anualizada, volatilidade e drawdown de cada ativo.</div>
+            <div class="asset-cards-grid" id="asset-perf-container"></div>
+          </div>
+
+          <!-- Divisor Elegante de Seção -->
+          <div class="surface-analytics-divider"></div>
+
+          <!-- SEÇÃO ANALÍTICA FINAL: MATRIZ DE CORRELAÇÃO DOS ATIVOS -->
+          <div class="analytics-card-frame" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+              <div>
+                <div class="surface-section-heading">Matriz de Correlação dos Ativos</div>
+                <div class="surface-section-desc" style="margin-bottom: 0;">Coeficientes de correlação de Pearson entre fundos e índices selecionados.</div>
+              </div>
+            </div>
+            <!-- Barra de Filtro de Índices / Benchmarks -->
+            <div class="heatmap-filter-bar" id="heatmap-filter-bar"></div>
+            <div class="heatmap-table-wrap" id="correlation-heatmap-container"></div>
+          </div>
+
+        </div>
+
+        <!-- ABA 2: CALCULADORA DE REBALANCEAMENTO -->
+        <div id="tab-calculator" class="tab-content">
+          <div class="surface-section-heading">Calculadora de Rebalanceamento & Ordens de Aplicação</div>
+          <div class="surface-section-desc">Informe o aporte a realizar e o algoritmo calculará as boletas respeitando as aplicações mínimas.</div>
+
+          <div style="display: flex; gap: 16px; align-items: flex-end; margin-bottom: 20px;">
+            <div class="form-group-item">
+              <label for="calc-contribution-input">Novo Aporte (R$):</label>
+              <input type="number" id="calc-contribution-input" class="form-input-clean" value="5000" step="100" style="font-weight: 700; width: 220px;">
+            </div>
+            <button id="btn-calculate-rebalance" class="btn-add-new" style="background: var(--charcoal-dark); color: #fff; padding: 9px 18px;">
+              Calcular Rebalanceamento
+            </button>
+            <button id="btn-pull-sim-balances" class="btn-add-new">Puxar Saldos da Simulação</button>
+          </div>
+
+          <div class="responsive-table-scroll" style="margin-bottom: 20px;">
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>Ativo</th>
+                  <th>Código</th>
+                  <th>Meta Alvo</th>
+                  <th>Aplicação Mínima</th>
+                  <th>Saldo Atual (R$)</th>
+                  <th>Participação</th>
+                </tr>
+              </thead>
+              <tbody id="calc-balances-tbody"></tbody>
+              <tfoot>
+                <tr style="font-weight: 700; background: var(--gray-slot);">
+                  <td colspan="4" style="text-align: right;">Total em Custódia:</td>
+                  <td id="calc-footer-total-balance">R$ 0,00</td>
+                  <td id="calc-footer-total-pct">100.0%</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div id="calc-results-section" style="display: none;">
+            <div class="surface-section-heading" style="margin-top: 20px;">Boletas Sugeridas de Aplicação</div>
+            <div class="responsive-table-scroll">
+              <table class="clean-table">
+                <thead>
+                  <tr>
+                    <th>Ativo</th>
+                    <th>Saldo Anterior</th>
+                    <th>Meta</th>
+                    <th style="background: var(--mint); color: var(--mint-dark); font-weight: 700;">Aporte Recomendado</th>
+                    <th>Aplicação Mínima</th>
+                    <th>Novo Saldo</th>
+                    <th>Nova %</th>
+                    <th>Desvio</th>
+                  </tr>
+                </thead>
+                <tbody id="calc-orders-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 3: MINHAS CARTEIRAS -->
+        <div id="tab-portfolio" class="tab-content">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div class="surface-section-heading">Configuração da Carteira Ativa</div>
+              <div class="surface-section-desc" style="margin-bottom: 0;">Configure fundos CVM por CNPJ, ativos B3 por Ticker e parâmetros da simulação.</div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button id="btn-portfolio-params" class="btn-add-new" style="display: inline-flex; align-items: center; gap: 6px;" title="Ajustar Aportes e Período">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span id="portfolio-period-text">Parâmetros (2024-05-02 até 2026-08-31)</span>
+              </button>
+              <button id="btn-save-portfolio" class="btn-add-new" style="background: var(--charcoal-dark); color: #fff;">Salvar Carteira</button>
+              <button id="btn-new-portfolio" class="btn-add-new">+ Nova Carteira</button>
+              <button id="btn-delete-portfolio" class="btn-add-new btn-delete-portfolio" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; display: inline-flex; align-items: center; gap: 6px;" title="Excluir esta carteira">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <span>Excluir Carteira</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+            <label for="portfolio-name-input" style="font-weight: 700; font-size: 0.85rem;">Nome:</label>
+            <input type="text" id="portfolio-name-input" class="form-input-clean" style="max-width: 260px; font-weight: 700;">
+            <div id="total-weight-indicator" style="font-weight: 700; font-size: 0.85rem;">Soma: 100.0%</div>
+          </div>
+
+          <div class="responsive-table-scroll" style="margin-bottom: 16px;">
+            <table class="clean-table">
+              <thead>
+                <tr>
+                  <th>Cor</th>
+                  <th>Tipo</th>
+                  <th>Código (CNPJ / Ticker)</th>
+                  <th>Nome</th>
+                  <th>Alocação Alvo (%)</th>
+                  <th>Aplicação Mínima (R$)</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-funds-table"></tbody>
+            </table>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-add-fund" class="btn-add-new">+ Adicionar Fundo CVM</button>
+            <button id="btn-add-b3" class="btn-add-new">+ Adicionar Ativo B3</button>
+          </div>
+        </div>
+
+        <!-- ABA 4: DADOS CVM & B3 -->
+        <div id="tab-data" class="tab-content">
+          <div class="surface-section-heading">Atualização de Dados CVM e B3</div>
+          <div class="surface-section-desc">Download e atualização incremental de informes diários CVM e cotações da B3.</div>
+
+          <div style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px;">
+            <div class="form-group-item">
+              <label for="update-start-date">Data Inicial:</label>
+              <input type="date" id="update-start-date" class="form-input-clean" value="2024-05-01">
+            </div>
+            <div class="form-group-item">
+              <label for="update-end-date">Data Final:</label>
+              <input type="date" id="update-end-date" class="form-input-clean" value="2026-08-31">
+            </div>
+            <button id="btn-update-incremental" class="btn-add-new" style="background: var(--charcoal-dark); color: #fff;">
+              Atualizar Faltantes (Incremental)
+            </button>
+          </div>
+
+          <div id="update-progress-alert" style="display: none; padding: 10px 14px; background: var(--sky); border-radius: 10px; font-size: 0.85rem; margin-bottom: 16px;">
+            <span id="update-progress-text">Coletando dados...</span>
+          </div>
+
+          <div class="surface-section-heading" style="font-size: 1rem; margin-top: 14px;">Fundos CVM</div>
+          <table class="clean-table" style="margin-bottom: 20px;">
+            <thead>
+              <tr>
+                <th>Fundo</th>
+                <th>CNPJ</th>
+                <th>Carteiras</th>
+                <th>Registros</th>
+                <th>Data Inicial</th>
+                <th>Data Final</th>
+                <th>Última Cota</th>
+              </tr>
+            </thead>
+            <tbody id="status-funds-table"></tbody>
+          </table>
+
+          <div class="surface-section-heading" style="font-size: 1rem;">Ativos B3</div>
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Ativo</th>
+                <th>Ticker</th>
+                <th>Carteiras</th>
+                <th>Registros</th>
+                <th>Data Inicial</th>
+                <th>Data Final</th>
+                <th>Última Cotação</th>
+              </tr>
+            </thead>
+            <tbody id="status-b3-table"></tbody>
+          </table>
+        </div>
+
+        <!-- ABA 5: FONTES & BENCHMARKS -->
+        <div id="tab-sources" class="tab-content">
+          <div class="surface-section-heading">Fontes de Dados & Benchmarks Globais</div>
+          <div class="surface-section-desc">Configurações de APIs, fontes oficiais de mercado e benchmarks salvos em JSON.</div>
+
+          <!-- Seção 1: APIs e Provedores de Dados Ativos -->
+          <div style="margin-bottom: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--charcoal-dark);">Provedores de Dados e Endpoints de API</h3>
+                <span style="font-size: 0.75rem; color: var(--charcoal-muted);">Configurações ativas de coleta salvas em <code>data/config/data_sources.json</code></span>
+              </div>
+              <button id="btn-save-sources" class="btn-add-new" style="background: var(--charcoal-dark); color: #fff;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Salvar APIs
+              </button>
+            </div>
+            <div class="sources-cards-grid" id="sources-cards-grid"></div>
+          </div>
+
+          <!-- Seção 2: Benchmarks de Mercado -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700; color: var(--charcoal-dark);">Benchmarks & Índices Rastreados</h3>
+              <span style="font-size: 0.75rem; color: var(--charcoal-muted);">Configurações de indicadores salvas em <code>data/config/benchmarks.json</code></span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-save-benchmarks" class="btn-add-new" style="background: var(--charcoal-dark); color: #fff;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Salvar Benchmarks
+              </button>
+              <button id="btn-add-benchmark" class="btn-add-new">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Adicionar Benchmark
+              </button>
+            </div>
+          </div>
+
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Ativo</th>
+                <th>Cor</th>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Provedor</th>
+                <th>Código / Ticker</th>
+                <th>Unidade</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="benchmarks-config-tbody"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Botão Flutuante Voltar ao Topo -->
+      <button id="btn-back-to-top" class="back-to-top-btn" title="Voltar ao topo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      </button>
+
+    </main>
+  </div>
+
+  <!-- Modal Flutuante de Parâmetros de Simulação (Acionado por + Add New ou Parâmetros) -->
+  <div class="params-floating-modal" id="params-modal">
+    <div class="params-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--charcoal-dark); display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Parâmetros da Simulação
+        </h3>
+        <button class="icon-btn-ghost" id="btn-close-params" title="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--charcoal-muted); margin-bottom: 16px;">
+        Ajuste o capital inicial, aportes mensais e o período histórico para recomputar os gráficos e indicadores.
+      </p>
+
+      <div class="form-row-grid">
+        <div class="form-group-item">
+          <label for="input-initial-capital">Aporte Inicial (R$)</label>
+          <input type="number" id="input-initial-capital" class="form-input-clean" value="20000" step="500">
+        </div>
+        <div class="form-group-item">
+          <label for="input-monthly-contribution">Aporte Mensal (R$)</label>
+          <input type="number" id="input-monthly-contribution" class="form-input-clean" value="2000" step="100">
+        </div>
+        <div class="form-group-item">
+          <label for="input-start-date">Data Inicial</label>
+          <input type="date" id="input-start-date" class="form-input-clean" value="2024-05-02">
+        </div>
+        <div class="form-group-item">
+          <label for="input-end-date">Data Final</label>
+          <input type="date" id="input-end-date" class="form-input-clean" value="2026-08-31">
+        </div>
+      </div>
+
+      <div class="form-group-item" style="margin-bottom: 20px;">
+        <label for="input-rebalance-mode">Modo de Rebalanceamento</label>
+        <select id="input-rebalance-mode" class="form-input-clean">
+          <option value="smart_inflow" selected>Aporte Direcionado (Comprar na Baixa)</option>
+          <option value="full_rebalance">Rebalanceamento Total (Vender + Comprar)</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-add-new" id="btn-cancel-params">Cancelar</button>
+        <button class="btn-add-new" id="btn-run-simulation" style="background: var(--charcoal-dark); color: #fff; padding: 8px 20px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Executar Simulação
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Customizado de Seleção de Cor Vibrante e Auxiliar -->
+  <div class="params-floating-modal" id="color-picker-modal">
+    <div class="params-modal-box" style="max-width: 440px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--charcoal-dark);">
+          Escolha uma Cor
+        </h3>
+        <button class="icon-btn-ghost" id="btn-close-color-picker" title="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--charcoal-muted); margin-bottom: 16px;">
+        Selecione uma cor vibrante para os gráficos e métricas. Uma cor auxiliar sutil será combinada para os fundos dos cards.
+      </p>
+
+      <!-- Prévia Dupla: Cor Principal Vibrante + Cor Auxiliar Sutil -->
+      <div id="color-picker-preview-box" style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding: 12px 14px; background: #EAF1F4; border-radius: 16px; border: 1px solid rgba(0,0,0,0.06); transition: background 0.2s ease;">
+        <div style="position: relative; width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+          <div id="color-picker-preview-circle" style="width: 42px; height: 42px; border-radius: 50%; background: #3B6978; border: 3px solid #FFFFFF; box-shadow: 0 3px 8px rgba(0,0,0,0.12); flex-shrink: 0;" title="Cor Principal (Vibrante)"></div>
+        </div>
+        <div style="flex: 1; min-width: 0;">
+          <div id="color-picker-name-label" style="font-size: 0.88rem; font-weight: 700; color: var(--charcoal-dark);">Slate Marine (Azuis)</div>
+          <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 0.70rem; color: var(--charcoal-muted); font-weight: 600;">Principal:</span>
+              <input type="text" id="color-picker-hex-input" class="form-input-clean" value="#3B6978" maxlength="7" style="font-family: monospace; font-size: 0.78rem; width: 80px; padding: 2px 6px; text-transform: uppercase;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 0.70rem; color: var(--charcoal-muted); font-weight: 600;">Auxiliar:</span>
+              <span id="color-picker-aux-pill" style="font-family: monospace; font-size: 0.76rem; font-weight: 700; color: var(--charcoal-dark); background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); padding: 2px 8px; border-radius: 9999px;">#EAF1F4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grade de Cores com Swatches mostrando Cor Principal + Auxiliar -->
+      <div style="font-size: 0.74rem; font-weight: 700; color: var(--charcoal-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Cores Vibrantes & Tons Auxiliares</div>
+      <div class="color-picker-grid" id="color-picker-grid"></div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <button class="btn-add-new" id="btn-apply-color" style="background: var(--charcoal-dark); color: #fff; padding: 8px 24px;">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Criação de Nova Carteira (Estilo Visual QuickBooks / PrevInvest) -->
+  <div class="params-floating-modal" id="create-portfolio-modal">
+    <div class="params-modal-box create-portfolio-modal-box">
+      <!-- Header do Modal -->
+      <div class="create-portfolio-modal-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="modal-header-icon-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              <line x1="12" y1="11" x2="12" y2="17"></line>
+              <line x1="9" y1="14" x2="15" y2="14"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title-text">Criar Nova Carteira</h3>
+            <p class="modal-subtitle-text">Defina o nome e o modelo inicial de ativos para a nova carteira.</p>
+          </div>
+        </div>
+        <button class="icon-btn-ghost" id="btn-close-create-portfolio" title="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Formulário -->
+      <form id="form-create-portfolio" onsubmit="return false;" style="margin-top: 18px;">
+        <div class="form-group-item" style="margin-bottom: 16px;">
+          <label for="input-new-portfolio-name">Nome da Carteira</label>
+          <input type="text" id="input-new-portfolio-name" class="form-input-clean modal-name-input" placeholder="Ex: Carteira Dividendos, Previdência Tech..." autocomplete="off" required>
+        </div>
+
+        <div class="form-group-item" style="margin-bottom: 20px;">
+          <label>Modelo Inicial de Ativos</label>
+          <div class="portfolio-template-cards-grid">
+            <label class="portfolio-template-card active" data-template="b3">
+              <input type="radio" name="portfolio_template" value="b3" checked style="display: none;">
+              <div class="template-card-badge">B3</div>
+              <div class="template-card-info">
+                <div class="template-card-title">Ações & ETFs B3</div>
+                <div class="template-card-desc">BOVA11 (50%) + IVVB11 (50%) com histórico de cotações</div>
+              </div>
+            </label>
+
+            <label class="portfolio-template-card" data-template="cvm">
+              <input type="radio" name="portfolio_template" value="cvm" style="display: none;">
+              <div class="template-card-badge cvm">CVM</div>
+              <div class="template-card-info">
+                <div class="template-card-title">Fundos de Previdência CVM</div>
+                <div class="template-card-desc">5 Fundos balanceados (Multimercado, Ações e Renda Fixa)</div>
+              </div>
+            </label>
+
+            <label class="portfolio-template-card" data-template="custom">
+              <input type="radio" name="portfolio_template" value="custom" style="display: none;">
+              <div class="template-card-badge custom">+</div>
+              <div class="template-card-info">
+                <div class="template-card-title">Personalizada</div>
+                <div class="template-card-desc">Começar com 1 ativo para você montar do zero</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer-actions">
+          <button type="button" class="btn-modal-ghost" id="btn-cancel-create-portfolio">Cancelar</button>
+          <button type="submit" class="btn-modal-primary" id="btn-submit-create-portfolio">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Criar Carteira</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão de Carteira -->
+  <div class="params-floating-modal" id="delete-portfolio-modal">
+    <div class="params-modal-box" style="max-width: 440px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border-radius: 12px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 style="font-size: 1.12rem; font-weight: 700; color: var(--charcoal-dark); margin: 0;">Excluir Carteira</h3>
+            <div style="font-size: 0.78rem; color: var(--charcoal-muted); margin-top: 2px;">Esta ação não pode ser desfeita.</div>
+          </div>
+        </div>
+        <button class="icon-btn-ghost" id="btn-close-delete-portfolio" title="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <p id="delete-portfolio-message" style="font-size: 0.88rem; color: var(--charcoal-mid); line-height: 1.5; margin: 16px 0 24px 0;">
+        Tem certeza de que deseja excluir a carteira <strong id="delete-portfolio-target-name">esta carteira</strong>? Todos os ativos e configurações associados serão removidos permanentemente.
+      </p>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn-modal-ghost" id="btn-cancel-delete-portfolio" style="padding: 8px 18px; font-size: 0.85rem;">Cancelar</button>
+        <button type="button" id="btn-confirm-delete-portfolio" style="padding: 8px 20px; font-size: 0.85rem; font-weight: 700; border-radius: 9999px; border: none; background: #DC2626; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Confirmar Exclusão</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/chart.umd.min.js"></script>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

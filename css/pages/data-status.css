@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Página: Diagnóstico de Dados Locais CVM / B3 (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+.data-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.data-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+}
+
+.data-status-badge.ok {
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+}
+
+.data-status-badge.missing {
+  background: var(--color-negative-bg);
+  color: var(--color-negative);
+}
+
+.data-path-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--gray-slot);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--charcoal-light);
+}
