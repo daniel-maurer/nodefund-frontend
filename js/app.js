@@ -11,7 +11,7 @@ import * as auth from './services/auth.js';
 // Importação dos Componentes Modulares
 import { initSidebar, renderSidebarPortfolios } from './components/sidebar.js';
 import { initTopBar, switchTab } from './components/topbar.js';
-import { initHeroKPIs, renderHeroKPIs } from './components/hero-kpis.js';
+import { initHeroKPIs, renderHeroKPIs, refreshMarketQuotes } from './components/hero-kpis.js';
 import { initSalesChart, updateChartVisibility } from './components/sales-chart.js';
 import { renderBankCards } from './components/bank-cards.js';
 import { initInvoices, renderInvoices } from './components/invoices.js';
@@ -27,6 +27,8 @@ import { initSourcesConfig } from './components/sources-config.js';
 import { initColorPickerModal } from './components/color-picker-modal.js';
 import { initCreatePortfolioModal, openCreatePortfolioModal } from './components/create-portfolio-modal.js';
 import { initDeletePortfolioModal } from './components/delete-portfolio-modal.js';
+import { initDividendsCharts, renderDividendsCharts } from './components/dividends-charts.js';
+import { initDividendsHistory, renderDividendsHistory } from './components/dividends-history.js';
 
 let componentsInitialized = false;
 
@@ -39,6 +41,8 @@ export function renderDashboardViews() {
   renderTreemap();
   renderCorrelationHeatmap();
   renderMonthlyTable();
+  renderDividendsCharts();
+  renderDividendsHistory();
   renderAssetCards();
   renderCalculatorBalances();
   renderPortfolioConfigTable();
@@ -58,6 +62,8 @@ export function initAppComponents() {
   initSalesChart();
   initInvoices();
   initMonthlyTable();
+  initDividendsCharts();
+  initDividendsHistory();
   initCalculator();
   initPortfolioConfig();
   initParamsModal();
@@ -412,6 +418,7 @@ async function loadAppData() {
     }
 
     renderDashboardViews();
+    refreshMarketQuotes();
   } catch (err) {
     console.error('Erro ao carregar dados:', err);
     showToast(`Erro ao carregar dados: ${err.message}`, 'error');

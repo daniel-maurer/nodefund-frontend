@@ -4,7 +4,7 @@
  * perfil Edgar Duncan e acionamento do modal de parâmetros.
  */
 
-import { state, notify } from '../state.js';
+import { state, notify, subscribe } from '../state.js';
 import { api } from '../services/api.js';
 import { showToast } from '../utils/formatters.js';
 import { switchTab } from './topbar.js';
@@ -12,6 +12,12 @@ import { openCreatePortfolioModal } from './create-portfolio-modal.js';
 import { openDeletePortfolioModal } from './delete-portfolio-modal.js';
 
 export function initSidebar() {
+  subscribe('portfolio_saved', () => {
+    renderSidebarPortfolios();
+  });
+  subscribe('portfolio_changed', () => {
+    renderSidebarPortfolios();
+  });
   const container = document.getElementById('sidebar-portfolios-list');
   const btnOpenParams = document.getElementById('btn-open-params');
   const searchInput = document.getElementById('sidebar-search-input');

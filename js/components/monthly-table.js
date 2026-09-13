@@ -240,7 +240,7 @@ export function renderMonthlyTable() {
   // 4. Determinar nome da carteira a exibir
   const portfolioName = (state.activePortfolio && state.activePortfolio.name) 
     ? state.activePortfolio.name 
-    : (sim.portfolio_name || 'CARTEIRA ATIVA');
+    : (sim.portfolio_name || 'CARTEIRA');
 
   // 5. Renderizar Grade Anual
   const yearsToRender = selectedYear === 'all' ? allYears : [selectedYear];
@@ -252,7 +252,7 @@ export function renderMonthlyTable() {
     let hasYearData = false;
 
     // Gerar células para os 12 meses (01 a 12)
-    let monthsHtml = '';
+    const monthsData = [];
     for (let m = 1; m <= 12; m++) {
       const ym = `${year}-${String(m).padStart(2, '0')}`;
       const item = monthMap[ym];
@@ -271,81 +271,65 @@ export function renderMonthlyTable() {
           pctBm = `${ratio.toFixed(2).replace('.', ',')}%`;
         }
 
-        const valClass = val >= 0 ? 'positive' : 'negative';
-        monthsHtml += `
-          <td>
-            <span class="rent-cell-val ${valClass}">${formatPct(val)}</span>
-            <span class="rent-cell-sub">${pctBm}</span>
-          </td>
-        `;
+        monthsData.push({
+          mainText: formatPct(val),
+          subText: pctBm,
+          isPositive: val >= 0,
+          isEmpty: false
+        });
       } else {
-        monthsHtml += `
-          <td>
-            <span class="rent-cell-val" style="color: var(--charcoal-muted); font-weight: normal;">-</span>
-            <span class="rent-cell-sub">-</span>
-          </td>
-        `;
+        monthsData.push({
+          mainText: '-',
+          subText: '-',
+          isEmpty: true
+        });
       }
     }
 
     // Cálculo do No Ano
-    let noAnoValHtml = '<span class="rent-cell-val" style="color: var(--charcoal-muted); font-weight: normal;">-</span>';
-    let noAnoSubHtml = '<span class="rent-cell-sub">-</span>';
-
+    let noAnoData = { mainText: '-', subText: '-', isPositive: null };
     if (hasYearData) {
       const yearRet = (yearPortFactor - 1.0) * 100.0;
       const yearBmRet = (yearBmFactor - 1.0) * 100.0;
-      const yearClass = yearRet >= 0 ? 'positive' : 'negative';
 
       let yearPctBm = '-';
       if (yearBmRet !== 0) {
         yearPctBm = `${((yearRet / yearBmRet) * 100.0).toFixed(2).replace('.', ',')}%`;
       }
 
-      noAnoValHtml = `<span class="rent-cell-val ${yearClass}">${formatPct(yearRet)}</span>`;
-      noAnoSubHtml = `<span class="rent-cell-sub">${yearPctBm}</span>`;
+      noAnoData = {
+        mainText: formatPct(yearRet),
+        subText: yearPctBm,
+        isPositive: yearRet >= 0
+      };
     }
 
     // Cálculo do Acumulado até o fim do ano
-    let acumValHtml = '<span class="rent-cell-val" style="color: var(--charcoal-muted); font-weight: normal;">-</span>';
-    let acumSubHtml = '<span class="rent-cell-sub">-</span>';
-
+    let acumData = { mainText: '-', subText: '-', isPositive: null };
     if (cumYearReturn[year] !== undefined) {
       const cumRet = cumYearReturn[year];
       const cumBmRet = cumBmYearReturn[year];
-      const cumClass = cumRet >= 0 ? 'positive' : 'negative';
 
       let cumPctBm = '-';
       if (cumBmRet !== 0) {
         cumPctBm = `${((cumRet / cumBmRet) * 100.0).toFixed(2).replace('.', ',')}%`;
       }
 
-      acumValHtml = `<span class="rent-cell-val ${cumClass}">${formatPct(cumRet)}</span>`;
-      acumSubHtml = `<span class="rent-cell-sub">${cumPctBm}</span>`;
+      acumData = {
+        mainText: formatPct(cumRet),
+        subText: cumPctBm,
+        isPositive: cumRet >= 0
+      };
     }
 
-    gridHtml += `
-      <tr>
-        <td style="white-space: nowrap;">
-          <div style="display: flex; align-items: baseline; gap: 10px;">
-            <span class="rent-cell-year">${year}</span>
-            <div style="overflow: hidden; text-align: left;">
-              <span class="rent-cell-asset-name" title="${portfolioName}">${portfolioName}</span>
-              <span class="rent-cell-bm-label">% ${bmLabel}</span>
-            </div>
-          </div>
-        </td>
-        ${monthsHtml}
-        <td>
-          ${noAnoValHtml}
-          ${noAnoSubHtml}
-        </td>
-        <td>
-          ${acumValHtml}
-          ${acumSubHtml}
-        </td>
-      </tr>
-    `;
+    gridHtml += renderRentGridRow({
+      year,
+      assetName: portfolioName,
+      subLabel: `% ${bmLabel}`,
+      monthsData,
+      noAno: noAnoData,
+      acumulado: acumData
+    });
   });
 
   gridTbody.innerHTML = gridHtml;
@@ -402,4 +386,72 @@ export function renderMonthlyTable() {
 
   listTbody.innerHTML = listHtml;
   applyViewVisibility();
+}
+
+/**
+ * Componente compartilhado de linha da grade anual (Ano x Mês + No ano + Acumulado).
+ * Reutilizado tanto pela Rentabilidade Histórica quanto pelo Histórico de Proventos (Dividendos).
+ */
+export function renderRentGridRow({
+  year,
+  assetName,
+  subLabel,
+  monthsData,
+  noAno,
+  acumulado
+}) {
+  let monthsHtml = '';
+  monthsData.forEach(m => {
+    if (m.isEmpty) {
+      monthsHtml += `
+        <td>
+          <span class="rent-cell-val" style="color: var(--charcoal-muted); font-weight: normal;">-</span>
+          <span class="rent-cell-sub">-</span>
+        </td>
+      `;
+    } else {
+      const valClass = m.isPositive === true ? 'positive' : (m.isPositive === false ? 'negative' : '');
+      monthsHtml += `
+        <td>
+          <span class="rent-cell-val ${valClass}">${m.mainText}</span>
+          <span class="rent-cell-sub">${m.subText}</span>
+        </td>
+      `;
+    }
+  });
+
+  const renderSummaryCell = (data) => {
+    if (!data || data.mainText === '-' || data.mainText === undefined) {
+      return `
+        <td>
+          <span class="rent-cell-val" style="color: var(--charcoal-muted); font-weight: normal;">-</span>
+          <span class="rent-cell-sub">-</span>
+        </td>
+      `;
+    }
+    const cls = data.isPositive === true ? 'positive' : (data.isPositive === false ? 'negative' : '');
+    return `
+      <td>
+        <span class="rent-cell-val ${cls}">${data.mainText}</span>
+        <span class="rent-cell-sub">${data.subText || '-'}</span>
+      </td>
+    `;
+  };
+
+  return `
+    <tr>
+      <td style="white-space: nowrap;">
+        <div style="display: flex; align-items: baseline; gap: 10px;">
+          <span class="rent-cell-year">${year}</span>
+          <div style="overflow: hidden; text-align: left;">
+            <span class="rent-cell-asset-name" title="${assetName}">${assetName}</span>
+            <span class="rent-cell-bm-label">${subLabel}</span>
+          </div>
+        </div>
+      </td>
+      ${monthsHtml}
+      ${renderSummaryCell(noAno)}
+      ${renderSummaryCell(acumulado)}
+    </tr>
+  `;
 }

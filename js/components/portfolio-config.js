@@ -10,6 +10,7 @@ import { PALETTE, COLORS, showToast, getSubtleAuxiliaryColor } from '../utils/fo
 import { openColorPicker } from './color-picker-modal.js';
 import { openCreatePortfolioModal } from './create-portfolio-modal.js';
 import { openDeletePortfolioModal } from './delete-portfolio-modal.js';
+import { renderSidebarPortfolios } from './sidebar.js';
 
 export function initPortfolioConfig() {
   const btnSave = document.getElementById('btn-save-portfolio');
@@ -17,6 +18,25 @@ export function initPortfolioConfig() {
   const btnDelete = document.getElementById('btn-delete-portfolio');
   const btnAddFund = document.getElementById('btn-add-fund');
   const btnAddB3 = document.getElementById('btn-add-b3');
+  const nameInput = document.getElementById('portfolio-name-input');
+
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      const newName = nameInput.value.trim() || 'Sem nome';
+      if (state.portfolio) state.portfolio.name = newName;
+      const activeSummary = state.portfolios?.find(p => p.id === state.activePortfolioId);
+      if (activeSummary) activeSummary.name = newName;
+
+      const activeLabel = document.getElementById('sidebar-active-portfolio-label');
+      if (activeLabel) activeLabel.innerText = newName;
+
+      const activeSideItem = document.querySelector(`.sidebar-portfolio-item[data-portfolio-id="${state.activePortfolioId}"] .portfolio-item-name`);
+      if (activeSideItem) activeSideItem.textContent = newName;
+
+      const titleEl = document.getElementById('report-portfolio-title');
+      if (titleEl) titleEl.innerText = newName;
+    });
+  }
 
   if (btnSave) btnSave.addEventListener('click', saveActivePortfolio);
   if (btnNew) btnNew.addEventListener('click', openCreatePortfolioModal);
@@ -241,6 +261,16 @@ export async function saveActivePortfolio() {
 
   try {
     const data = await api.savePortfolio(state.portfolio);
+    if (data && data.portfolios) {
+      state.portfolios = data.portfolios;
+    } else if (state.portfolios) {
+      const idx = state.portfolios.findIndex(p => p.id === state.portfolio.id);
+      if (idx !== -1) {
+        state.portfolios[idx].name = state.portfolio.name;
+        state.portfolios[idx].asset_count = state.portfolio.funds.length;
+      }
+    }
+    renderSidebarPortfolios();
     showToast(`Carteira "${state.portfolio.name}" salva com sucesso!`, 'success');
     notify('portfolio_saved', state.portfolio);
   } catch (err) {

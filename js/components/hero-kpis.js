@@ -65,15 +65,27 @@ export function initHeroKPIs() {
   }
 }
 
+export async function refreshMarketQuotes() {
+  try {
+    const res = await api.fetchMarketQuotes(true);
+    if (res && res.quotes) {
+      state.marketQuotes = res.quotes;
+      renderMarketQuotes();
+    }
+  } catch (err) {
+    console.warn('Erro ao atualizar cotações de mercado:', err);
+  }
+}
+
 export function renderMarketQuotes() {
   const container = document.getElementById('hero-stats-row');
   if (!container) return;
 
   const quotes = (state.marketQuotes && state.marketQuotes.length > 0) ? state.marketQuotes : [
-    { id: 'sp500', name: 'S&P 500', formatted_value: '7.686,14 pts', pct_change: -0.33, is_positive: false, date: '31/08/2026' },
-    { id: 'ibov', name: 'Ibovespa', formatted_value: '177.419 pts', pct_change: 1.0, is_positive: true, date: '31/08/2026' },
-    { id: 'btc', name: 'Bitcoin (USD)', formatted_value: 'US$ 78.548,63', pct_change: 1.13, is_positive: true, date: '31/08/2026' },
-    { id: 'usd', name: 'Dólar Hoje', formatted_value: 'R$ 5,18', pct_change: -0.18, is_positive: false, date: '31/08/2026' }
+    { id: 'sp500', name: 'S&P 500', formatted_value: '39.257,34 pts', pct_change: 0.86, is_positive: true, date: '11/09/2026' },
+    { id: 'ibov', name: 'Ibovespa', formatted_value: '187.207 pts', pct_change: -0.56, is_positive: false, date: '11/09/2026' },
+    { id: 'btc', name: 'Bitcoin', formatted_value: 'R$ 393.537,50', pct_change: -0.65, is_positive: false, date: '13/09/2026' },
+    { id: 'usd', name: 'Dólar', formatted_value: 'R$ 5,13', pct_change: 0.02, is_positive: true, date: '13/09/2026' }
   ];
 
   let html = '';

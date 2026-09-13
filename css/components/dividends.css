@@ -1,0 +1,224 @@
+/* ==========================================================================
+   Seções de Dividendos & Proventos (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+/* Container Principal das Seções */
+.dividends-section-frame {
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.dividends-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Barra de Chips KPI no Topo da Seção de Gráficos */
+.dividends-kpi-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 900px) {
+  .dividends-kpi-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .dividends-kpi-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dividends-kpi-card {
+  background: var(--gray-slot);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.dividends-kpi-card:hover {
+  background: #ECEEF2;
+}
+
+.dividends-kpi-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--charcoal-muted);
+  letter-spacing: 0.04em;
+}
+
+.dividends-kpi-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--charcoal-dark);
+  letter-spacing: -0.02em;
+}
+
+.dividends-kpi-sub {
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+  font-weight: 500;
+}
+
+/* Grid de Gráficos (2 Colunas Responsivas) */
+.dividends-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1080px) {
+  .dividends-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dividends-chart-card {
+  background: var(--gray-slot);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dividends-chart-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dividends-chart-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--charcoal-dark);
+}
+
+.dividends-chart-subtitle {
+  font-size: 0.75rem;
+  color: var(--charcoal-muted);
+  margin-top: 2px;
+}
+
+.dividends-chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  margin-top: 6px;
+}
+
+/* Badge Alpha de Proventos */
+.dividends-alpha-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+  border: 1px solid var(--mint-border);
+}
+
+/* Badges e Pílulas da Tabela */
+.dividend-asset-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.dividend-asset-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dividend-type-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #E9ECEF;
+  color: var(--charcoal);
+}
+
+.dividend-type-tag.rendimento {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.dividend-type-tag.dividendo {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.dividend-amount-positive {
+  font-weight: 800;
+  color: var(--color-positive);
+  font-family: var(--font-mono);
+}
+
+/* Empty State Informativo */
+.dividends-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--gray-slot);
+  border-radius: 14px;
+  border: 1px dashed var(--border-medium);
+}
+
+.dividends-empty-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--charcoal-muted);
+}
+
+.dividends-empty-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--charcoal-dark);
+  margin-bottom: 6px;
+}
+
+.dividends-empty-desc {
+  font-size: 0.8rem;
+  color: var(--charcoal-muted);
+  max-width: 460px;
+  line-height: 1.45;
+}

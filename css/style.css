@@ -28,6 +28,7 @@
 @import url('./components/treemap.css') layer(components);
 @import url('./components/modals.css') layer(components);
 @import url('./components/login.css') layer(components);
+@import url('./components/dividends.css') layer(components);
 
 /* 6. Páginas / Abas */
 @import url('./pages/rebalancear.css') layer(pages);
