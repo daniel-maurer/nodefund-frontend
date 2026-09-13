@@ -31,6 +31,11 @@ test('Frontend Files - integridade da estrutura HTML, CSS e JS', () => {
   assert.ok(html.includes('dribbble-frame'), 'HTML deve conter a moldura principal');
   assert.ok(html.includes('dribbble-sidebar'), 'HTML deve conter a barra lateral');
   assert.ok(html.includes('btn-mobile-menu'), 'HTML deve conter o botão hambúrguer');
+  assert.ok(html.includes('login-screen'), 'HTML deve conter a tela de login');
+  assert.ok(html.includes('auth-tabs'), 'HTML deve conter as abas de autenticação');
+  assert.ok(html.includes('btn-top-add-new'), 'HTML deve conter o botão + Add New no topo');
+  assert.ok(html.includes('btn-sidebar-add-portfolio'), 'HTML deve conter o botão + de carteira na sidebar');
+  assert.ok(html.includes('create-portfolio-modal'), 'HTML deve conter o modal de criação de carteira');
 });
 
 test('Frontend CSS - variáveis de design tokens declaradas em :root', () => {

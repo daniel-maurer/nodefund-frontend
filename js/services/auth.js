@@ -1,11 +1,70 @@
 // Authentication service for Cognito via BFF proxy
-// Tokens stored in memory only (not localStorage) for security
+// Tokens securely persisted in client storage to prevent unwanted logouts on reload
+
+const STORAGE_KEY = 'nodefund_session_tokens';
 
 let idToken = null;
 let accessToken = null;
 let refreshToken = null;
 let user = null;
 let refreshTimer = null;
+
+// Tenta restaurar do storage ao carregar o módulo
+restoreFromStorage();
+
+function saveToStorage(data) {
+  try {
+    const payload = {
+      id_token: idToken,
+      access_token: accessToken,
+      refresh_token: refreshToken
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  } catch (e) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (_) {}
+  }
+}
+
+function restoreFromStorage() {
+  try {
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+
+    const data = JSON.parse(raw);
+    if (data && data.id_token) {
+      idToken = data.id_token;
+      accessToken = data.access_token || null;
+      refreshToken = data.refresh_token || null;
+      decodeUserFromToken(idToken);
+      scheduleRefresh();
+    }
+  } catch (e) {
+    console.warn('Erro ao restaurar sessão:', e);
+  }
+}
+
+function clearStorage() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch (_) {}
+}
+
+function decodeUserFromToken(token) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    user = {
+      sub: payload.sub,
+      email: payload.email,
+      name: payload.name || payload['custom:name'] || (payload.email ? payload.email.split('@')[0] : 'Usuário')
+    };
+  } catch (e) {
+    user = null;
+  }
+}
 
 export async function signup(email, password, name) {
   const res = await fetch('/api/auth/signup', {
@@ -45,6 +104,7 @@ export async function login(email, password) {
   }
   const data = await res.json();
   setTokens(data);
+  saveToStorage(data);
   return data;
 }
 
@@ -55,6 +115,7 @@ export function logout() {
   user = null;
   if (refreshTimer) clearTimeout(refreshTimer);
   refreshTimer = null;
+  clearStorage();
   window.dispatchEvent(new CustomEvent('auth_logout'));
 }
 
@@ -71,39 +132,46 @@ export async function refreshSession() {
   }
   const data = await res.json();
   setTokens(data);
+  saveToStorage(data);
   return data;
 }
 
 export async function getIdToken() {
+  if (!idToken) {
+    restoreFromStorage();
+  }
   if (!idToken) return null;
+
   // Check if token is about to expire (< 5 min)
   try {
     const payload = JSON.parse(atob(idToken.split('.')[1]));
     const expiresIn = payload.exp * 1000 - Date.now();
-    if (expiresIn < 300000) { // < 5 minutes
+    if (expiresIn < 300000 && refreshToken) { // < 5 minutes
       await refreshSession();
     }
   } catch (e) { /* token parse error, return as-is */ }
   return idToken;
 }
 
-export function getUser() { return user; }
-export function isAuthenticated() { return !!idToken; }
+export function getUser() {
+  if (!user && idToken) {
+    decodeUserFromToken(idToken);
+  }
+  return user;
+}
+
+export function isAuthenticated() {
+  if (!idToken) {
+    restoreFromStorage();
+  }
+  return !!idToken;
+}
 
 function setTokens(data) {
   idToken = data.id_token || data.IdToken || idToken;
   accessToken = data.access_token || data.AccessToken || accessToken;
   refreshToken = data.refresh_token || data.RefreshToken || refreshToken;
-  // Decode user from idToken
-  try {
-    const payload = JSON.parse(atob(idToken.split('.')[1]));
-    user = {
-      sub: payload.sub,
-      email: payload.email,
-      name: payload.name || payload['custom:name'] || payload.email.split('@')[0]
-    };
-  } catch (e) { user = null; }
-  // Schedule refresh 5 minutes before expiry
+  decodeUserFromToken(idToken);
   scheduleRefresh();
 }
 

@@ -190,14 +190,19 @@ export function initCreatePortfolioModal() {
     });
   }
 
-  window.openCreatePortfolioModal = openModal;
+  window.openCreatePortfolioModal = () => {
+    openModal();
+  };
 }
 
 export function openCreatePortfolioModal() {
-  if (typeof window.openCreatePortfolioModal === 'function') {
-    window.openCreatePortfolioModal();
-  } else {
-    const modal = document.getElementById('create-portfolio-modal');
-    if (modal) modal.classList.add('open');
+  const modal = document.getElementById('create-portfolio-modal');
+  const nameInput = document.getElementById('input-new-portfolio-name');
+  if (modal) {
+    modal.classList.add('open');
+    if (nameInput) {
+      nameInput.value = '';
+      setTimeout(() => nameInput.focus(), 60);
+    }
   }
 }
