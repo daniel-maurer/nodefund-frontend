@@ -13,6 +13,7 @@ export const state = {
   activeCurrency: 'brl', // 'brl', 'usd'
   chartCurrency: 'brl', // 'brl', 'usd' (exclusive to the main chart)
   activePeriod: 'all', // '1m', '3m', '6m', '1y', '2y', 'all'
+  endDateMode: (typeof localStorage !== 'undefined' && localStorage.getItem('prev_end_date_mode')) || 'today', // 'today' | 'custom'
   visibleSeries: {
     'smart': true,
     'passive': true,

@@ -39,6 +39,10 @@
   scrollbar-width: thin;
 }
 
+.table-mobile-hint {
+  display: none;
+}
+
 /* ==========================================================================
    Breakpoints Responsivos
    ========================================================================== */
@@ -407,6 +411,47 @@
     min-height: auto;
   }
 
+  /* Cabeçalhos de Seções e Controles em Coluna Única */
+  .rentabilidade-header-row,
+  .dividends-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .rentabilidade-view-pills {
+    width: 100%;
+    display: flex;
+  }
+
+  .rentabilidade-view-btn {
+    flex: 1;
+    text-align: center;
+    padding: 7px 10px;
+  }
+
+  /* Popovers contidos na largura da tela mobile para evitar quebras */
+  .month-picker-popover {
+    max-width: calc(100vw - 28px) !important;
+    left: auto !important;
+    right: 0 !important;
+  }
+
+  /* Dica visual de rolagem horizontal e toque */
+  .table-mobile-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 0.70rem;
+    font-weight: 600;
+    color: var(--charcoal-muted);
+    background: rgba(0, 0, 0, 0.035);
+    border-radius: 10px;
+    letter-spacing: 0.01em;
+  }
+
   /* Tabelas Responsivas com Primeira Coluna Fixa (Sticky) */
   .rentabilidade-grid-table-wrap {
     overflow-x: auto;
@@ -416,8 +461,21 @@
     border-radius: 12px;
   }
 
-  .rentabilidade-grid-table th:first-child,
-  .rentabilidade-grid-table td:first-child {
+  /* Correção crítica de contraste: thead th:first-child escuro com texto branco */
+  .rentabilidade-grid-table thead th:first-child,
+  #monthly-list-container .clean-table thead th:first-child,
+  #div-list-container .clean-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    background: #141B29 !important;
+    color: #FFFFFF !important;
+    z-index: 5;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Linhas de dados com fundo branco na primeira coluna fixa */
+  .rentabilidade-grid-table tbody td:first-child,
+  .clean-table tbody td:first-child {
     position: sticky;
     left: 0;
     background: #FFFFFF;
@@ -425,13 +483,42 @@
     box-shadow: 2px 0 6px rgba(0, 0, 0, 0.06);
   }
 
-  .clean-table th:first-child,
-  .clean-table td:first-child {
-    position: sticky;
-    left: 0;
-    background: #FFFFFF;
-    z-index: 2;
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  /* Compactar nome do ativo na primeira coluna em telas menores */
+  .rent-cell-asset-name {
+    max-width: 80px;
+    font-size: 0.68rem;
+  }
+
+  .rent-cell-bm-label {
+    font-size: 0.62rem;
+  }
+
+  .rent-cell-year {
+    font-size: 0.82rem;
+  }
+
+  .rentabilidade-grid-table th,
+  .rentabilidade-grid-table td {
+    padding: 8px 5px;
+    font-size: 0.72rem;
+  }
+
+  .rent-cell-val {
+    font-size: 0.74rem;
+  }
+
+  .rent-cell-sub {
+    font-size: 0.64rem;
+  }
+
+  /* Células clicáveis com feedback de toque */
+  .rentabilidade-grid-table tbody td:not(:first-child),
+  .clean-table tbody tr {
+    cursor: pointer;
+  }
+
+  .rentabilidade-grid-table tbody td:not(:first-child):active {
+    background: rgba(0, 0, 0, 0.08);
   }
 
   /* Modais em Dispositivos Móveis */
@@ -448,6 +535,34 @@
     overflow-y: auto;
     padding: 20px 16px !important;
     border-radius: 20px !important;
+  }
+
+  /* Bottom Sheet Drawer Mobile para Detalhamento */
+  #mobile-detail-modal {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  #mobile-detail-modal .mobile-detail-sheet-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 0px)) 18px !important;
+    max-height: 82vh !important;
+    animation: sheetSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .mobile-sheet-drag-handle {
+    display: block;
+  }
+
+  @keyframes sheetSlideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
   .portfolio-template-cards-grid {

@@ -1,0 +1,203 @@
+/* ==========================================================================
+   Modern Component Skeletons & Loading States (nodefund)
+   Distributed Node Architecture
+   ========================================================================== */
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.4) 0%,
+    rgba(241, 245, 249, 0.85) 50%,
+    rgba(226, 232, 240, 0.4) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-radius: 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Tamanhos de texto / valores */
+.skeleton-val-lg {
+  width: 140px;
+  height: 2rem;
+  border-radius: 8px;
+}
+
+.skeleton-val-md {
+  width: 110px;
+  height: 1.4rem;
+  border-radius: 6px;
+}
+
+.skeleton-val-sm {
+  width: 70px;
+  height: 1rem;
+  border-radius: 4px;
+}
+
+.skeleton-pill {
+  height: 22px;
+  border-radius: 9999px;
+}
+
+/* Skeleton para Gráficos */
+.chart-skeleton-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: inherit;
+  border: 1px dashed rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px 24px 16px 24px;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.chart-skeleton-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  height: 48%;
+  min-height: 100px;
+  max-height: 160px;
+  width: 100%;
+}
+
+.chart-skeleton-bar {
+  flex: 1;
+  border-radius: 6px 6px 0 0;
+  min-width: 18px;
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.45) 0%,
+    rgba(241, 245, 249, 0.85) 50%,
+    rgba(226, 232, 240, 0.45) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.chart-loading-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--white);
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--charcoal-dark);
+  z-index: 2;
+}
+
+/* Skeleton para Treemap */
+.treemap-skeleton-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr;
+  grid-template-rows: 140px 100px;
+  gap: 8px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.treemap-skeleton-block {
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.45) 0%,
+    rgba(241, 245, 249, 0.85) 50%,
+    rgba(226, 232, 240, 0.45) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Skeleton para Matriz de Correlação */
+.heatmap-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.heatmap-skeleton-cell {
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.45) 0%,
+    rgba(241, 245, 249, 0.85) 50%,
+    rgba(226, 232, 240, 0.45) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Skeleton para Lista de Invoices (Desempenho por Mês) */
+.invoices-skeleton-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--white);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Skeleton para Cards de Ativos */
+.asset-card-skeleton {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Animação suave de entrada quando os dados reais chegam */
+.component-fade-in {
+  animation: componentFadeIn 0.25s ease-out forwards;
+}
+
+@keyframes componentFadeIn {
+  from {
+    opacity: 0.5;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

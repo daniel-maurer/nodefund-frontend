@@ -609,6 +609,12 @@
               </div>
             </div>
 
+            <!-- Dica visual de rolagem e toque no mobile -->
+            <div class="table-mobile-hint">
+              <span>&larr; Deslize para ver os meses &rarr;</span>
+              <span>Toque na c&eacute;lula para detalhes</span>
+            </div>
+
             <!-- Grade Anual (Default conforme layout solicitado) -->
             <div id="monthly-grid-container" class="rentabilidade-grid-table-wrap">
               <table class="rentabilidade-grid-table">
@@ -708,7 +714,7 @@
                 <div class="dividends-chart-card-header">
                   <div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                      <div class="dividends-chart-title">Rentabilidade: Cota vs Cota + Dividendos</div>
+                      <div class="dividends-chart-title">Rentabilidade</div>
                       <span class="dividends-alpha-badge" id="div-tr-alpha-badge" style="display: none;">Alpha</span>
                     </div>
                     <div class="dividends-chart-subtitle">Comparativo de variação de cota vs Total Return com dividendos</div>
@@ -804,6 +810,12 @@
 
             <!-- Conteúdo com Grade e Lista -->
             <div id="div-history-content">
+              <!-- Dica visual de rolagem e toque no mobile -->
+              <div class="table-mobile-hint">
+                <span>&larr; Deslize para ver os meses &rarr;</span>
+                <span>Toque na c&eacute;lula para detalhes</span>
+              </div>
+
               <!-- 1. Grade Anual de Proventos -->
               <div id="div-grid-container" class="rentabilidade-grid-table-wrap">
                 <table class="rentabilidade-grid-table">
@@ -1118,6 +1130,7 @@
         Ajuste o capital inicial, aportes mensais e o período histórico para recomputar os gráficos e indicadores.
       </p>
 
+      <!-- Bloco de Aportes -->
       <div class="form-row-grid">
         <div class="form-group-item">
           <label for="input-initial-capital">Aporte Inicial (R$)</label>
@@ -1127,13 +1140,32 @@
           <label for="input-monthly-contribution">Aporte Mensal (R$)</label>
           <input type="number" id="input-monthly-contribution" class="form-input-clean" value="2000" step="100">
         </div>
-        <div class="form-group-item">
-          <label for="input-start-date">Data Inicial</label>
-          <input type="date" id="input-start-date" class="form-input-clean" value="2024-05-02">
+      </div>
+
+      <!-- Bloco de Período com Cabeçalho e Seletor Alinhado -->
+      <div class="form-period-section">
+        <div class="form-period-header">
+          <span class="form-period-title">Período da Simulação</span>
+          <div class="end-date-mode-pills" id="end-date-mode-pills">
+            <button type="button" class="end-date-mode-btn active" id="btn-end-date-today" data-mode="today" title="Simular até hoje (data atual em tempo real)">
+              <span class="dot-indicator"></span>
+              Hoje (Atual)
+            </button>
+            <button type="button" class="end-date-mode-btn" id="btn-end-date-custom" data-mode="custom" title="Definir uma data de corte específica">
+              Personalizada
+            </button>
+          </div>
         </div>
-        <div class="form-group-item">
-          <label for="input-end-date">Data Final</label>
-          <input type="date" id="input-end-date" class="form-input-clean" value="2026-08-31">
+
+        <div class="form-row-grid form-dates-grid">
+          <div class="form-group-item">
+            <label for="input-start-date">Data Inicial</label>
+            <input type="date" id="input-start-date" class="form-input-clean" value="2024-05-02">
+          </div>
+          <div class="form-group-item">
+            <label for="input-end-date">Data Final</label>
+            <input type="date" id="input-end-date" class="form-input-clean" value="">
+          </div>
         </div>
       </div>
 
@@ -1306,6 +1338,33 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           <span>Confirmar Exclusão</span>
         </button>
+      </div>
+    </div>
+  <!-- Modal / Bottom Sheet de Detalhamento Mobile (Células, Proventos, Ativos) -->
+  <div class="params-floating-modal" id="mobile-detail-modal">
+    <div class="mobile-detail-sheet-box">
+      <!-- Barra de arraste visual mobile -->
+      <div class="mobile-sheet-drag-handle"></div>
+
+      <div class="mobile-sheet-header">
+        <div style="min-width: 0; flex: 1;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h3 class="mobile-sheet-title" id="mobile-detail-title">Detalhamento</h3>
+            <span class="badge-pill badge-mint" id="mobile-detail-badge" style="display: none;"></span>
+          </div>
+          <div class="mobile-sheet-sub" id="mobile-detail-sub"></div>
+        </div>
+        <button class="icon-btn-ghost" id="btn-close-mobile-detail" title="Fechar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="mobile-sheet-body" id="mobile-detail-body">
+        <!-- Itens inseridos dinamicamente -->
+      </div>
+
+      <div class="mobile-sheet-footer" id="mobile-detail-footer" style="display: none;">
+        <span id="mobile-detail-footer-text"></span>
       </div>
     </div>
   </div>

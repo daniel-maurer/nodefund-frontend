@@ -8,11 +8,13 @@
 import { state } from '../state.js';
 import { formatMoney, formatPct, getAssetKey } from '../utils/formatters.js';
 import { renderRentGridRow } from './monthly-table.js';
+import { openMobileDetailModal } from './mobile-modal.js';
 
 let activeHistoryView = 'grid'; // 'grid' | 'list'
 let selectedHistoryAsset = 'all'; // 'all' | asset_key
 let selectedHistoryYear = 'all'; // 'all' | '2024' | '2025' ...
 let selectedHistoryMonth = 'all'; // 'all' | '01' | '02' ... '12'
+let currentFilteredDividendsList = [];
 
 const MONTHS_LIST = [
   { id: '01', label: 'Jan' },
@@ -112,6 +114,26 @@ export function initDividendsHistory() {
       popoverMonth.style.display = 'none';
     }
   });
+
+  // 5. Delegação de cliques para células da Grade e linhas do Extrato (Mobile Sheet)
+  const divGridTbody = document.getElementById('div-grid-tbody');
+  const divListTbody = document.getElementById('div-list-tbody');
+
+  if (divGridTbody) {
+    divGridTbody.addEventListener('click', (e) => {
+      const cell = e.target.closest('.rent-cell-interactive');
+      if (!cell) return;
+      handleDividendsGridCellClick(cell);
+    });
+  }
+
+  if (divListTbody) {
+    divListTbody.addEventListener('click', (e) => {
+      const tr = e.target.closest('tr[data-div-idx]');
+      if (!tr) return;
+      handleDividendsListRowClick(tr);
+    });
+  }
 }
 
 function closeAllHistoryPopovers() {
@@ -387,7 +409,8 @@ function renderDividendsGrid() {
       subLabel: '% Yield',
       monthsData,
       noAno: noAnoData,
-      acumulado: acumData
+      acumulado: acumData,
+      tableType: 'div'
     });
   });
 
@@ -420,6 +443,8 @@ function renderDividendsList() {
     });
   }
 
+  currentFilteredDividendsList = list;
+
   if (countBadge) {
     countBadge.textContent = `${list.length} lançamento${list.length !== 1 ? 's' : ''}`;
   }
@@ -432,7 +457,7 @@ function renderDividendsList() {
   let rowsHtml = '';
   let sumFiltered = 0;
 
-  list.forEach(item => {
+  list.forEach((item, idx) => {
     sumFiltered += (item.total_amount || 0);
 
     const dateParts = (item.date || '').split('-');
@@ -447,7 +472,7 @@ function renderDividendsList() {
     }
 
     rowsHtml += `
-      <tr>
+      <tr data-div-idx="${idx}" class="div-list-row" style="cursor: pointer;">
         <td style="font-weight: 600; color: var(--charcoal-dark);">${dateFormatted}</td>
         <td>
           <div class="dividend-asset-pill">
@@ -486,4 +511,96 @@ function renderDividendsList() {
   `;
 
   tbody.innerHTML = rowsHtml;
+}
+
+function handleDividendsGridCellClick(cell) {
+  const table = cell.getAttribute('data-table');
+  if (table !== 'div') return;
+
+  const divs = state.simulationResult?.dividends;
+  if (!divs) return;
+
+  const year = cell.getAttribute('data-year');
+  const month = cell.getAttribute('data-month');
+  const type = cell.getAttribute('data-type');
+  const gridScope = divs?.annual_grid?.[selectedHistoryAsset] || divs?.annual_grid?.all || {};
+  const row = gridScope[year] || {};
+
+  let assetDisplayName = (state.activePortfolio && state.activePortfolio.name) 
+    ? state.activePortfolio.name 
+    : 'Toda a Carteira';
+
+  if (selectedHistoryAsset !== 'all') {
+    const funds = state.simulationResult?.funds || [];
+    const match = funds.find(f => getAssetKey(f) === selectedHistoryAsset);
+    assetDisplayName = match ? (match.code || match.name) : selectedHistoryAsset;
+  }
+
+  if (type === 'month' && year && month) {
+    const val = row[month] || row[`${month}_val`] || 0;
+    const mYield = (row[`${month}_yield`] !== undefined && row[`${month}_yield`] > 0)
+      ? row[`${month}_yield`]
+      : ((row.total > 0 && row.yield_pct) ? ((val / row.total) * row.yield_pct) : 0);
+
+    const monthMatch = MONTHS_LIST.find(m => m.id === month);
+    const monthLabel = monthMatch ? monthMatch.label : month;
+
+    openMobileDetailModal({
+      title: `Proventos · ${monthLabel} / ${year}`,
+      subtitle: `Ativo: ${assetDisplayName}`,
+      badge: val > 0 ? formatMoney(val, state.activeCurrency) : 'Sem proventos',
+      badgeClass: val > 0 ? 'badge-mint' : 'badge-peach',
+      items: [
+        { label: 'Total Creditado no Mês', value: formatMoney(val, state.activeCurrency), color: '#166534', isFull: true },
+        { label: 'Dividend Yield no Mês', value: mYield > 0 ? formatPct(mYield) : '0,00%' },
+        { label: `Total no Ano (${year})`, value: formatMoney(row.total || 0, state.activeCurrency) },
+        { label: `Yield no Ano (${year})`, value: formatPct(row.yield_pct || 0) },
+        { label: 'Escopo do Filtro', value: assetDisplayName }
+      ],
+      footerText: 'Toque fora ou no X para fechar'
+    });
+  } else if ((type === 'no-ano' || type === 'acumulado') && year) {
+    const yearTotal = row.total || 0;
+    const yearYield = row.yield_pct || 0;
+
+    openMobileDetailModal({
+      title: `Proventos · Fechamento ${year}`,
+      subtitle: `Ativo: ${assetDisplayName}`,
+      badge: `${formatMoney(yearTotal, state.activeCurrency)}`,
+      badgeClass: 'badge-mint',
+      items: [
+        { label: 'Total Creditado no Ano', value: formatMoney(yearTotal, state.activeCurrency), color: '#166534', isFull: true },
+        { label: 'Dividend Yield no Ano', value: formatPct(yearYield) },
+        { label: 'Ano Referência', value: year },
+        { label: 'Ativo / Carteira', value: assetDisplayName, isFull: true }
+      ],
+      footerText: 'Consolidado anual de proventos'
+    });
+  }
+}
+
+function handleDividendsListRowClick(tr) {
+  const idx = parseInt(tr.getAttribute('data-div-idx'), 10);
+  if (isNaN(idx) || !currentFilteredDividendsList[idx]) return;
+
+  const item = currentFilteredDividendsList[idx];
+  const dateParts = (item.date || '').split('-');
+  const dateFormatted = (dateParts.length === 3)
+    ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
+    : item.date;
+
+  openMobileDetailModal({
+    title: `Provento · ${dateFormatted}`,
+    subtitle: `${item.ticker || item.asset_key} · ${item.name || ''}`,
+    badge: item.type || 'Dividendo',
+    badgeClass: 'badge-mint',
+    items: [
+      { label: 'Total Creditado', value: formatMoney(item.total_amount || 0), color: '#166534', isFull: true },
+      { label: 'Valor por Cota', value: formatMoney(item.amount_per_share || 0, 4) },
+      { label: 'Dividend Yield', value: (item.yield_pct !== undefined && item.yield_pct > 0) ? formatPct(item.yield_pct) : '—' },
+      { label: 'Cotas Detidas', value: `${(item.shares || 0).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} cotas` },
+      { label: 'Tipo de Evento', value: item.type || 'Dividendo' }
+    ],
+    footerText: 'Toque fora ou no X para fechar'
+  });
 }

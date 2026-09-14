@@ -110,6 +110,24 @@ export async function calculateRebalance() {
     return;
   }
 
+  const btnCalc = document.getElementById('btn-calculate-rebalance');
+  const section = document.getElementById('calc-results-section');
+  const tbody = document.getElementById('calc-orders-tbody');
+  if (btnCalc) btnCalc.disabled = true;
+  if (section && tbody) {
+    section.style.display = 'block';
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" style="padding: 28px; text-align: center;">
+          <div style="display: inline-flex; align-items: center; gap: 10px;">
+            <span class="sync-spinner"></span>
+            <span class="skeleton-shimmer" style="width: 140px; height: 1.1rem;"></span>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
   try {
     const data = await api.calculateRebalance({
       portfolio: state.portfolio,
@@ -122,6 +140,8 @@ export async function calculateRebalance() {
     showToast('Rebalanceamento calculado com sucesso!', 'success');
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    if (btnCalc) btnCalc.disabled = false;
   }
 }
 

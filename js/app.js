@@ -21,7 +21,7 @@ import { initMonthlyTable, renderMonthlyTable } from './components/monthly-table
 import { renderAssetCards } from './components/asset-cards.js';
 import { initCalculator, renderCalculatorBalances } from './components/calculator.js';
 import { initPortfolioConfig, renderPortfolioConfigTable } from './components/portfolio-config.js';
-import { initParamsModal } from './components/params-modal.js';
+import { initParamsModal, getTodayLocalDate } from './components/params-modal.js';
 import { initDataStatus } from './components/data-status.js';
 import { initSourcesConfig } from './components/sources-config.js';
 import { initColorPickerModal } from './components/color-picker-modal.js';
@@ -29,11 +29,14 @@ import { initCreatePortfolioModal, openCreatePortfolioModal } from './components
 import { initDeletePortfolioModal } from './components/delete-portfolio-modal.js';
 import { initDividendsCharts, renderDividendsCharts } from './components/dividends-charts.js';
 import { initDividendsHistory, renderDividendsHistory } from './components/dividends-history.js';
+import { initMobileDetailModal } from './components/mobile-modal.js';
+import { renderAllComponentsLoading, removeSalesChartLoading } from './components/loading-state.js';
 
 let componentsInitialized = false;
 
 // Função Central para Atualização de Todas as Views do Dashboard
 export function renderDashboardViews() {
+  removeSalesChartLoading();
   renderHeroKPIs();
   renderBankCards();
   renderInvoices();
@@ -72,6 +75,7 @@ export function initAppComponents() {
   initDataStatus();
   initSourcesConfig();
   initColorPickerModal();
+  initMobileDetailModal();
   switchTab('tab-simulation');
 
   // Assinatura de Eventos Reativos
@@ -357,6 +361,7 @@ async function createDefaultStarterPortfolio() {
 }
 
 async function loadAppData() {
+  renderAllComponentsLoading();
   try {
     let pData = await api.fetchPortfolios();
     let portfolios = pData.portfolios || [];
@@ -470,7 +475,9 @@ export async function triggerBackgroundDataSync(portfolio) {
 
   try {
     const startDate = document.getElementById('input-start-date')?.value || '2024-05-02';
-    const endDate = document.getElementById('input-end-date')?.value || '2026-08-31';
+    const endDate = (state.endDateMode === 'today')
+      ? getTodayLocalDate()
+      : (document.getElementById('input-end-date')?.value || getTodayLocalDate());
 
     await api.updateData({
       funds: portfolio.funds,
@@ -494,12 +501,15 @@ window.triggerBackgroundDataSync = triggerBackgroundDataSync;
 
 async function runCurrentSimulation(isRetryAfterSync = false) {
   if (!state.portfolio) return;
+  renderAllComponentsLoading();
   try {
     const data = await api.runSimulation({
       initial_capital: parseFloat(document.getElementById('input-initial-capital')?.value) || 20000,
       monthly_contribution: parseFloat(document.getElementById('input-monthly-contribution')?.value) || 2000,
       start_date: document.getElementById('input-start-date')?.value || '2024-05-02',
-      end_date: document.getElementById('input-end-date')?.value || '2026-08-31',
+      end_date: (state.endDateMode === 'today')
+        ? getTodayLocalDate()
+        : (document.getElementById('input-end-date')?.value || getTodayLocalDate()),
       rebalance_mode: document.getElementById('input-rebalance-mode')?.value || 'smart_inflow',
       portfolio: state.portfolio
     });

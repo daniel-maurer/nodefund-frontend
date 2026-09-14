@@ -6,6 +6,7 @@
 
 import { state } from '../state.js';
 import { formatMoney, PALETTE } from '../utils/formatters.js';
+import { openMobileDetailModal } from './mobile-modal.js';
 
 function getFundColor(item, idx) {
   // 1. Explicit item color if provided and not default blue
@@ -216,6 +217,7 @@ export function renderTreemap() {
     node.style.justifyContent = 'space-between';
     node.style.overflow = 'hidden';
 
+    node.style.cursor = 'pointer';
     node.addEventListener('mouseenter', () => {
       node.style.boxShadow = '0 8px 22px rgba(0, 0, 0, 0.14)';
       node.style.zIndex = '5';
@@ -232,27 +234,59 @@ export function renderTreemap() {
 
     const isSmallH = r.h < 170;
     const isNarrow = r.w < 210;
+    const isVeryCompact = r.w < 115 || r.h < 95;
     const titleSize = (isSmallH || isNarrow) ? '0.78rem' : '0.86rem';
     const valSize = (r.w > 300 && r.h > 220) ? '1.5rem' : ((isSmallH || isNarrow) ? '1.2rem' : '1.35rem');
 
-    node.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px;">
-        <div style="min-width: 0; flex: 1;">
-          <div style="font-weight: 700; font-size: ${titleSize}; line-height: 1.2; color: ${textColor}; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${item.name}</div>
-          <div style="font-size: 0.68rem; color: ${subColor}; margin-top: 2px; font-weight: 500;">${item.code || item.key}</div>
+    if (isVeryCompact) {
+      node.style.padding = '8px 10px';
+      node.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 4px;">
+          <div style="font-weight: 700; font-size: 0.74rem; color: ${textColor}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.code || item.name}</div>
+          <span style="font-size: 0.62rem; font-weight: 700; padding: 1px 4px; border-radius: 9999px; background: ${badgeBg}; color: ${textColor}; white-space: nowrap;">${devSign}${dev.toFixed(1)}%</span>
         </div>
-        <span style="font-size: 0.70rem; font-weight: 700; padding: 2px 6px; border-radius: 9999px; background: ${badgeBg}; color: ${textColor}; border: ${badgeBorder}; backdrop-filter: blur(4px); white-space: nowrap; flex-shrink: 0;">
-          ${devSign}${dev.toFixed(1)}%
-        </span>
-      </div>
-      <div style="margin-top: ${isSmallH ? '4px' : '10px'}; display: flex; justify-content: space-between; align-items: flex-end; gap: 6px;">
-        <div>
-          <div style="font-size: ${valSize}; font-weight: 800; color: ${textColor}; line-height: 1.05;">${pct.toFixed(1)}%</div>
-          <div style="font-size: 0.68rem; color: ${subColor}; margin-top: 2px; font-weight: 500;">Meta: ${(item.target_pct || 0).toFixed(1)}%</div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 4px;">
+          <div style="font-size: 1.05rem; font-weight: 800; color: ${textColor}; line-height: 1;">${pct.toFixed(1)}%</div>
+          <div style="font-weight: 700; font-size: 0.72rem; color: ${subColor}; white-space: nowrap;">${balance}</div>
         </div>
-        <div style="font-weight: 800; font-size: ${(isSmallH || isNarrow) ? '0.82rem' : '0.95rem'}; color: ${textColor}; white-space: nowrap;">${balance}</div>
-      </div>
-    `;
+      `;
+    } else {
+      node.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px;">
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-weight: 700; font-size: ${titleSize}; line-height: 1.2; color: ${textColor}; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${item.name}</div>
+            <div style="font-size: 0.68rem; color: ${subColor}; margin-top: 2px; font-weight: 500;">${item.code || item.key}</div>
+          </div>
+          <span style="font-size: 0.70rem; font-weight: 700; padding: 2px 6px; border-radius: 9999px; background: ${badgeBg}; color: ${textColor}; border: ${badgeBorder}; backdrop-filter: blur(4px); white-space: nowrap; flex-shrink: 0;">
+            ${devSign}${dev.toFixed(1)}%
+          </span>
+        </div>
+        <div style="margin-top: ${isSmallH ? '4px' : '10px'}; display: flex; justify-content: space-between; align-items: flex-end; gap: 6px;">
+          <div>
+            <div style="font-size: ${valSize}; font-weight: 800; color: ${textColor}; line-height: 1.05;">${pct.toFixed(1)}%</div>
+            <div style="font-size: 0.68rem; color: ${subColor}; margin-top: 2px; font-weight: 500;">Meta: ${(item.target_pct || 0).toFixed(1)}%</div>
+          </div>
+          <div style="font-weight: 800; font-size: ${(isSmallH || isNarrow) ? '0.82rem' : '0.95rem'}; color: ${textColor}; white-space: nowrap;">${balance}</div>
+        </div>
+      `;
+    }
+
+    node.addEventListener('click', () => {
+      openMobileDetailModal({
+        title: item.name,
+        subtitle: `${item.code || item.key || ''} · ${item.type || 'Fundo / Ativo'}`,
+        badge: `${devSign}${dev.toFixed(1)}% Desvio`,
+        badgeClass: dev >= 0 ? 'badge-mint' : 'badge-peach',
+        items: [
+          { label: 'Saldo Atual', value: balance, color: fundColor, isFull: true },
+          { label: 'Participação Atual', value: `${pct.toFixed(1)}%` },
+          { label: 'Meta Definida', value: `${(item.target_pct || 0).toFixed(1)}%` },
+          { label: 'Desvio da Alocação', value: `${devSign}${dev.toFixed(1)}%`, color: dev >= 0 ? '#166534' : '#DC2626' },
+          { label: 'Moeda da Carteira', value: isUSD ? 'Dólar (USD)' : 'Real (BRL)' }
+        ],
+        footerText: 'Toque fora ou no X para fechar'
+      });
+    });
 
     container.appendChild(node);
   });

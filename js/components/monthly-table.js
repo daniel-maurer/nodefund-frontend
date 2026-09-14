@@ -6,6 +6,7 @@
 
 import { state } from '../state.js';
 import { formatMoney, formatPct, PALETTE } from '../utils/formatters.js';
+import { openMobileDetailModal } from './mobile-modal.js';
 
 let activeView = 'grid'; // 'grid' | 'list'
 
@@ -77,6 +78,27 @@ export function initMonthlyTable() {
       popoverBm.style.display = 'none';
     }
   });
+
+  // 4. Delegação de cliques interativos para células da Grade e linhas da Lista (Mobile Sheet)
+  const gridTbody = document.getElementById('monthly-grid-tbody');
+  const listTbody = document.getElementById('monthly-table-body');
+
+  if (gridTbody) {
+    gridTbody.addEventListener('click', (e) => {
+      const cell = e.target.closest('.rent-cell-interactive');
+      if (!cell) return;
+      handleRentGridCellClick(cell);
+    });
+  }
+
+  if (listTbody) {
+    listTbody.addEventListener('click', (e) => {
+      const tr = e.target.closest('tr[data-ym]');
+      if (!tr) return;
+      const ym = tr.getAttribute('data-ym');
+      handleRentListRowClick(ym);
+    });
+  }
 }
 
 function closeAllRentPopovers() {
@@ -272,6 +294,7 @@ export function renderMonthlyTable() {
         }
 
         monthsData.push({
+          monthNum: String(m).padStart(2, '0'),
           mainText: formatPct(val),
           subText: pctBm,
           isPositive: val >= 0,
@@ -279,6 +302,7 @@ export function renderMonthlyTable() {
         });
       } else {
         monthsData.push({
+          monthNum: String(m).padStart(2, '0'),
           mainText: '-',
           subText: '-',
           isEmpty: true
@@ -370,7 +394,7 @@ export function renderMonthlyTable() {
     const cumAlphaColor = cumAlpha >= 0 ? PALETTE.charts.gain_positive : PALETTE.charts.gain_negative;
 
     listHtml += `
-      <tr>
+      <tr data-ym="${m.month}" class="rent-list-row" style="cursor: pointer;">
         <td><strong>${m.month_label}</strong></td>
         <td style="color: ${gainColor}; font-weight: 700;">${gainSign}${formatMoney(gain, state.activeCurrency)}</td>
         <td><strong style="color: ${retPctColor};">${formatPct(retPct)}</strong></td>
@@ -398,10 +422,12 @@ export function renderRentGridRow({
   subLabel,
   monthsData,
   noAno,
-  acumulado
+  acumulado,
+  tableType = 'rent'
 }) {
   let monthsHtml = '';
-  monthsData.forEach(m => {
+  monthsData.forEach((m, idx) => {
+    const monthNum = m.monthNum || String(idx + 1).padStart(2, '0');
     if (m.isEmpty) {
       monthsHtml += `
         <td>
@@ -412,7 +438,7 @@ export function renderRentGridRow({
     } else {
       const valClass = m.isPositive === true ? 'positive' : (m.isPositive === false ? 'negative' : '');
       monthsHtml += `
-        <td>
+        <td class="rent-cell-interactive" data-table="${tableType}" data-year="${year}" data-month="${monthNum}" data-type="month" style="cursor: pointer;">
           <span class="rent-cell-val ${valClass}">${m.mainText}</span>
           <span class="rent-cell-sub">${m.subText}</span>
         </td>
@@ -420,7 +446,7 @@ export function renderRentGridRow({
     }
   });
 
-  const renderSummaryCell = (data) => {
+  const renderSummaryCell = (data, type) => {
     if (!data || data.mainText === '-' || data.mainText === undefined) {
       return `
         <td>
@@ -431,7 +457,7 @@ export function renderRentGridRow({
     }
     const cls = data.isPositive === true ? 'positive' : (data.isPositive === false ? 'negative' : '');
     return `
-      <td>
+      <td class="rent-cell-interactive" data-table="${tableType}" data-year="${year}" data-type="${type}" style="cursor: pointer;">
         <span class="rent-cell-val ${cls}">${data.mainText}</span>
         <span class="rent-cell-sub">${data.subText || '-'}</span>
       </td>
@@ -450,8 +476,123 @@ export function renderRentGridRow({
         </div>
       </td>
       ${monthsHtml}
-      ${renderSummaryCell(noAno)}
-      ${renderSummaryCell(acumulado)}
+      ${renderSummaryCell(noAno, 'no-ano')}
+      ${renderSummaryCell(acumulado, 'acumulado')}
     </tr>
   `;
+}
+
+function handleRentGridCellClick(cell) {
+  const sim = state.simulationResult;
+  if (!sim || !sim.monthly_summary) return;
+
+  const table = cell.getAttribute('data-table');
+  if (table === 'div') return; // Manipulado pelo componente de dividendos
+
+  const year = cell.getAttribute('data-year');
+  const month = cell.getAttribute('data-month');
+  const type = cell.getAttribute('data-type');
+  const isUSD = state.activeCurrency === 'usd';
+  const selectedBm = state.selectedMonthlyBenchmark || 'cdi';
+  const bmNames = {
+    cdi: 'CDI', ibov: 'IBOVESPA', ipca: 'IPCA', sp500: 'S&P 500',
+    poupanca: 'Poupança', ifix: 'IFIX', btc: 'Bitcoin', usd: 'Dólar'
+  };
+  const bmLabel = bmNames[selectedBm] || selectedBm.toUpperCase();
+  const portfolioName = (state.activePortfolio && state.activePortfolio.name) 
+    ? state.activePortfolio.name 
+    : (sim.portfolio_name || 'CARTEIRA');
+
+  if (type === 'month' && year && month) {
+    const ym = `${year}-${month}`;
+    handleRentListRowClick(ym);
+  } else if ((type === 'no-ano' || type === 'acumulado') && year) {
+    const yearMonths = sim.monthly_summary.filter(x => x.month.startsWith(`${year}-`));
+    if (yearMonths.length === 0) return;
+
+    let portFactor = 1.0;
+    let bmFactor = 1.0;
+    let totalGain = 0;
+
+    yearMonths.forEach(m => {
+      const ret = isUSD ? (m.return_pct_usd || 0) : (m.return_pct || 0);
+      const bmRet = m.benchmarks_returns ? (m.benchmarks_returns[selectedBm] || 0) : 0;
+      const gain = isUSD ? (m.capital_gain_usd || 0) : (m.capital_gain || 0);
+
+      portFactor *= (1.0 + ret / 100.0);
+      bmFactor *= (1.0 + bmRet / 100.0);
+      totalGain += gain;
+    });
+
+    const yearRet = (portFactor - 1.0) * 100.0;
+    const yearBmRet = (bmFactor - 1.0) * 100.0;
+    const yearAlpha = yearRet - yearBmRet;
+    let yearPctBm = '-';
+    if (yearBmRet !== 0) {
+      yearPctBm = `${((yearRet / yearBmRet) * 100.0).toFixed(1).replace('.', ',')}% do ${bmLabel}`;
+    }
+
+    openMobileDetailModal({
+      title: `Rentabilidade · Ano ${year}`,
+      subtitle: `${portfolioName} · Benchmark: ${bmLabel}`,
+      badge: `${yearRet >= 0 ? '+' : ''}${yearRet.toFixed(2).replace('.', ',')}% no Ano`,
+      badgeClass: yearRet >= 0 ? 'badge-mint' : 'badge-peach',
+      items: [
+        { label: 'Retorno Carteira (Ano)', value: formatPct(yearRet), color: yearRet >= 0 ? '#166534' : '#DC2626', isFull: true },
+        { label: `Benchmark (${bmLabel})`, value: formatPct(yearBmRet) },
+        { label: '% do Benchmark', value: yearPctBm },
+        { label: 'Alfa no Ano', value: `${yearAlpha >= 0 ? '+' : ''}${yearAlpha.toFixed(2).replace('.', ',')}%`, color: yearAlpha >= 0 ? '#166534' : '#DC2626' },
+        { label: 'Ganho Líquido Total', value: `${totalGain >= 0 ? '+' : ''}${formatMoney(totalGain, state.activeCurrency)}`, color: totalGain >= 0 ? '#166534' : '#DC2626', isFull: true }
+      ],
+      footerText: `Consolidado anual de ${yearMonths.length} meses apurados em ${year}`
+    });
+  }
+}
+
+function handleRentListRowClick(ym) {
+  const sim = state.simulationResult;
+  if (!sim || !sim.monthly_summary) return;
+
+  const m = sim.monthly_summary.find(x => x.month === ym);
+  if (!m) return;
+
+  const isUSD = state.activeCurrency === 'usd';
+  const selectedBm = state.selectedMonthlyBenchmark || 'cdi';
+  const bmNames = {
+    cdi: 'CDI', ibov: 'IBOVESPA', ipca: 'IPCA', sp500: 'S&P 500',
+    poupanca: 'Poupança', ifix: 'IFIX', btc: 'Bitcoin', usd: 'Dólar'
+  };
+  const bmLabel = bmNames[selectedBm] || selectedBm.toUpperCase();
+  const portfolioName = (state.activePortfolio && state.activePortfolio.name) 
+    ? state.activePortfolio.name 
+    : (sim.portfolio_name || 'CARTEIRA');
+
+  const ret = isUSD ? (m.return_pct_usd || 0) : (m.return_pct || 0);
+  const bmRet = m.benchmarks_returns ? (m.benchmarks_returns[selectedBm] || 0) : 0;
+  const alpha = ret - bmRet;
+  const gain = isUSD ? (m.capital_gain_usd || 0) : (m.capital_gain || 0);
+  const endVal = isUSD ? (m.end_val_usd || 0) : (m.end_val || 0);
+
+  let pctOfBm = '-';
+  if (bmRet > 0) {
+    pctOfBm = `${((ret / bmRet) * 100.0).toFixed(0)}% do ${bmLabel}`;
+  } else if (bmRet < 0 && ret > 0) {
+    pctOfBm = 'Superou (Índice Negativo)';
+  }
+
+  openMobileDetailModal({
+    title: `Rentabilidade · ${m.month_label || ym}`,
+    subtitle: `${portfolioName} · Benchmark: ${bmLabel}`,
+    badge: `${alpha >= 0 ? '+' : ''}${alpha.toFixed(2).replace('.', ',')}% Alfa`,
+    badgeClass: alpha >= 0 ? 'badge-mint' : 'badge-peach',
+    items: [
+      { label: 'Retorno Carteira', value: formatPct(ret), color: ret >= 0 ? '#166534' : '#DC2626', isFull: true },
+      { label: `Retorno ${bmLabel}`, value: formatPct(bmRet) },
+      { label: '% do Benchmark', value: pctOfBm },
+      { label: 'Ganho Líquido', value: `${gain >= 0 ? '+' : ''}${formatMoney(gain, state.activeCurrency)}`, color: gain >= 0 ? '#166534' : '#DC2626' },
+      { label: 'Saldo ao Final', value: formatMoney(endVal, state.activeCurrency) },
+      { label: 'Alfa no Mês', value: `${alpha >= 0 ? '+' : ''}${alpha.toFixed(2).replace('.', ',')}%`, color: alpha >= 0 ? '#166534' : '#DC2626' }
+    ],
+    footerText: 'Toque fora ou no X para fechar'
+  });
 }

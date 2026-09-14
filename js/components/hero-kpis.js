@@ -139,8 +139,12 @@ export function renderHeroKPIs() {
     if (networthEl) {
       networthEl.innerText = isUSD ? formatMoney(sim.final_smart_val_usd, 'usd') : formatMoney(sim.final_smart_val, 'brl');
     }
-    if (portPeriodTextEl && sim.start_date && sim.end_date) {
-      portPeriodTextEl.innerText = `Parâmetros (${sim.start_date} até ${sim.end_date})`;
+    if (portPeriodTextEl && sim.start_date) {
+      if (state.endDateMode === 'today') {
+        portPeriodTextEl.innerText = `Parâmetros (${sim.start_date} até Hoje)`;
+      } else {
+        portPeriodTextEl.innerText = `Parâmetros (${sim.start_date} até ${sim.end_date})`;
+      }
     }
   }
 

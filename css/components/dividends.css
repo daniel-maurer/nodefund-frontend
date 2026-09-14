@@ -48,7 +48,21 @@
 
 @media (max-width: 500px) {
   .dividends-kpi-bar {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .dividends-kpi-card {
+    padding: 10px 12px;
+  }
+  .dividends-kpi-label {
+    font-size: 0.65rem;
+  }
+  .dividends-kpi-value {
+    font-size: 1.05rem;
+  }
+  .dividends-kpi-sub {
+    font-size: 0.68rem;
   }
 }
 
@@ -136,6 +150,8 @@
   width: 100%;
   height: 290px;
   margin-top: 6px;
+  overflow: hidden;
+  border-radius: 14px;
 }
 
 /* Badge Alpha de Proventos */
