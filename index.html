@@ -626,7 +626,7 @@
             </div>
 
             <!-- Lista Cronológica Tradicional -->
-            <div id="monthly-list-container" style="display: none; overflow-x: auto; margin-top: 14px;">
+            <div id="monthly-list-container" class="rentabilidade-grid-table-wrap" style="display: none; margin-top: 14px;">
               <table class="clean-table">
                 <thead>
                   <tr>
@@ -743,7 +743,7 @@
             <div class="dividends-header-row">
               <div>
                 <div class="surface-section-heading">Histórico de Proventos</div>
-                <div class="surface-section-desc" style="margin-bottom: 0;">Grade anualizada de pagamentos e extrato cronológico detalhado por ativo ou consolidado.</div>
+                <div class="surface-section-desc" style="margin-bottom: 0;">Detalhamento de proventos por ativo ou consolidado.</div>
               </div>
 
               <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -821,24 +821,26 @@
               </div>
 
               <!-- 2. Lista Cronológica (Extrato) -->
-              <div id="div-list-container" style="display: none; overflow-x: auto; margin-top: 14px;">
+              <div id="div-list-container" style="display: none; margin-top: 14px;">
                 <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                   <span class="bank-badge-pill" id="div-list-count-badge">0 lançamentos</span>
                 </div>
-                <table class="clean-table">
-                  <thead>
-                    <tr>
-                      <th>Data</th>
-                      <th>Ativo</th>
-                      <th>Tipo</th>
-                      <th>Valor / Cota</th>
-                      <th>Dividend Yield (%)</th>
-                      <th>Cotas Detidas</th>
-                      <th style="text-align: right;">Total Creditado</th>
-                    </tr>
-                  </thead>
-                  <tbody id="div-list-tbody"></tbody>
-                </table>
+                <div class="rentabilidade-grid-table-wrap">
+                  <table class="clean-table">
+                    <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Ativo</th>
+                        <th>Tipo</th>
+                        <th>Valor / Cota</th>
+                        <th>Dividend Yield (%)</th>
+                        <th>Cotas Detidas</th>
+                        <th style="text-align: right;">Total Creditado</th>
+                      </tr>
+                    </thead>
+                    <tbody id="div-list-tbody"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

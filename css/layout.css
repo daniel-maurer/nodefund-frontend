@@ -6,7 +6,7 @@
 /* Moldura Arredondada Principal da Aplicação (Janela Desktop Fixa) */
 .dribbble-frame {
   width: 100%;
-  max-width: 1440px;
+  max-width: min(1720px, 96vw);
   height: calc(100vh - 48px);
   max-height: calc(100vh - 48px);
   background: 

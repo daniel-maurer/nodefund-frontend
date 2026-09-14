@@ -13,6 +13,16 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
+/* Histórico de Proventos: fundo cinza e espaçamento idênticos à Rentabilidade Histórica */
+#dividends-history-section {
+  background: var(--gray-slot);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: none;
+}
+
 .dividends-header-row {
   display: flex;
   justify-content: space-between;
@@ -192,7 +202,7 @@
   justify-content: center;
   padding: 48px 24px;
   text-align: center;
-  background: var(--gray-slot);
+  background: var(--white);
   border-radius: 14px;
   border: 1px dashed var(--border-medium);
 }
